@@ -45,6 +45,9 @@ public class UserServiceImpl implements UserService {
         User user = userMapper.toEntity(request);
         // Şifre hashleme işlemi burada yapılmalı (ör: passwordEncoder.encode(request.getPassword()))
         // user.setPassword(...);
+        if (user.getStatus() == null) {
+            user.setStatus(com.bulutsoft.bulutstore.entity.UserStatus.ACTIVE);
+        }
         return userMapper.toResponse(userRepository.save(user));
     }
 

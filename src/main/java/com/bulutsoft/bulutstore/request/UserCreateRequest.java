@@ -1,6 +1,7 @@
 package com.bulutsoft.bulutstore.request;
 
 import com.bulutsoft.bulutstore.entity.Role;
+import com.bulutsoft.bulutstore.entity.UserStatus;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
@@ -20,6 +21,8 @@ public class UserCreateRequest {
 
     private Role role;
 
+    private UserStatus status;
+
     // Getters and setters
     public String getUsername() { return username; }
     public void setUsername(String username) { this.username = username; }
@@ -29,5 +32,6 @@ public class UserCreateRequest {
     public void setPassword(String password) { this.password = password; }
     public Role getRole() { return role; }
     public void setRole(Role role) { this.role = role; }
+    public UserStatus getStatus() { return status; }
+    public void setStatus(UserStatus status) { this.status = status; }
 }
-
