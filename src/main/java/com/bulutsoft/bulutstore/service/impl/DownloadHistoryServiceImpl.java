@@ -8,6 +8,8 @@ import com.bulutsoft.bulutstore.repos.DownloadHistoryRepository;
 import com.bulutsoft.bulutstore.repos.AppRepository;
 import com.bulutsoft.bulutstore.repos.UserRepository;
 import com.bulutsoft.bulutstore.service.DownloadHistoryService;
+import com.bulutsoft.bulutstore.request.DownloadHistoryRequest;
+import com.bulutsoft.bulutstore.response.DownloadHistoryResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -34,40 +36,40 @@ public class DownloadHistoryServiceImpl implements DownloadHistoryService {
     }
 
     @Override
-    public List<DownloadHistoryDto> getAllDownloadHistories() {
-        return downloadHistoryMapper.toDtoList(downloadHistoryRepository.findAll());
+    public List<DownloadHistoryResponse> getAllDownloadHistories() {
+        return downloadHistoryMapper.toResponseList(downloadHistoryRepository.findAll());
     }
 
     @Override
-    public Optional<DownloadHistoryDto> getDownloadHistoryById(Long id) {
-        return downloadHistoryRepository.findById(id).map(downloadHistoryMapper::toDto);
-    }
-
-    @Override
-    @Transactional
-    public DownloadHistoryDto createDownloadHistory(DownloadHistoryDto downloadHistoryDto) {
-        DownloadHistory downloadHistory = downloadHistoryMapper.toEntity(downloadHistoryDto);
-        if (downloadHistoryDto.getApp() != null && downloadHistoryDto.getApp().getId() != null) {
-            appRepository.findById(downloadHistoryDto.getApp().getId()).ifPresent(downloadHistory::setApp);
-        }
-        if (downloadHistoryDto.getUser() != null && downloadHistoryDto.getUser().getId() != null) {
-            userRepository.findById(downloadHistoryDto.getUser().getId()).ifPresent(downloadHistory::setUser);
-        }
-        return downloadHistoryMapper.toDto(downloadHistoryRepository.save(downloadHistory));
+    public Optional<DownloadHistoryResponse> getDownloadHistoryById(Long id) {
+        return downloadHistoryRepository.findById(id).map(downloadHistoryMapper::toResponse);
     }
 
     @Override
     @Transactional
-    public DownloadHistoryDto updateDownloadHistory(Long id, DownloadHistoryDto downloadHistoryDto) {
-        DownloadHistory downloadHistory = downloadHistoryMapper.toEntity(downloadHistoryDto);
+    public DownloadHistoryResponse createDownloadHistory(DownloadHistoryRequest request) {
+        DownloadHistory downloadHistory = downloadHistoryMapper.toEntity(request);
+        appRepository.findById(request.getAppId()).ifPresent(downloadHistory::setApp);
+        if (request.getUserId() != null) {
+            userRepository.findById(request.getUserId()).ifPresent(downloadHistory::setUser);
+        } else {
+            downloadHistory.setUser(null);
+        }
+        return downloadHistoryMapper.toResponse(downloadHistoryRepository.save(downloadHistory));
+    }
+
+    @Override
+    @Transactional
+    public DownloadHistoryResponse updateDownloadHistory(Long id, DownloadHistoryRequest request) {
+        DownloadHistory downloadHistory = downloadHistoryMapper.toEntity(request);
         downloadHistory.setId(id);
-        if (downloadHistoryDto.getApp() != null && downloadHistoryDto.getApp().getId() != null) {
-            appRepository.findById(downloadHistoryDto.getApp().getId()).ifPresent(downloadHistory::setApp);
+        appRepository.findById(request.getAppId()).ifPresent(downloadHistory::setApp);
+        if (request.getUserId() != null) {
+            userRepository.findById(request.getUserId()).ifPresent(downloadHistory::setUser);
+        } else {
+            downloadHistory.setUser(null);
         }
-        if (downloadHistoryDto.getUser() != null && downloadHistoryDto.getUser().getId() != null) {
-            userRepository.findById(downloadHistoryDto.getUser().getId()).ifPresent(downloadHistory::setUser);
-        }
-        return downloadHistoryMapper.toDto(downloadHistoryRepository.save(downloadHistory));
+        return downloadHistoryMapper.toResponse(downloadHistoryRepository.save(downloadHistory));
     }
 
     @Override
@@ -77,15 +79,14 @@ public class DownloadHistoryServiceImpl implements DownloadHistoryService {
     }
 
     @Override
-    public List<DownloadHistoryDto> getDownloadHistoriesByUser(Long userId) {
+    public List<DownloadHistoryResponse> getDownloadHistoriesByUser(Long userId) {
         Optional<User> user = userRepository.findById(userId);
-        return user.map(u -> downloadHistoryMapper.toDtoList(downloadHistoryRepository.findByUser(u))).orElse(List.of());
+        return user.map(u -> downloadHistoryMapper.toResponseList(downloadHistoryRepository.findByUser(u))).orElse(List.of());
     }
 
     @Override
-    public List<DownloadHistoryDto> getDownloadHistoriesByApp(Long appId) {
+    public List<DownloadHistoryResponse> getDownloadHistoriesByApp(Long appId) {
         Optional<App> app = appRepository.findById(appId);
-        return app.map(a -> downloadHistoryMapper.toDtoList(downloadHistoryRepository.findByApp(a))).orElse(List.of());
+        return app.map(a -> downloadHistoryMapper.toResponseList(downloadHistoryRepository.findByApp(a))).orElse(List.of());
     }
 }
-

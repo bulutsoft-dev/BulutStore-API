@@ -1,5 +1,7 @@
 package com.bulutsoft.bulutstore.controller;
 
+import com.bulutsoft.bulutstore.request.DownloadHistoryRequest;
+import com.bulutsoft.bulutstore.response.DownloadHistoryResponse;
 import com.bulutsoft.bulutstore.service.DownloadHistoryService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -22,7 +24,7 @@ public class DownloadHistoryController {
     @Operation(summary = "Get all download histories")
     @ApiResponse(responseCode = "200", description = "List of download histories")
     @GetMapping
-    public ResponseEntity<List<DownloadHistoryDto>> getAllDownloadHistories() {
+    public ResponseEntity<List<DownloadHistoryResponse>> getAllDownloadHistories() {
         return ResponseEntity.ok(downloadHistoryService.getAllDownloadHistories());
     }
 
@@ -32,7 +34,7 @@ public class DownloadHistoryController {
         @ApiResponse(responseCode = "404", description = "Download history not found")
     })
     @GetMapping("/{id}")
-    public ResponseEntity<DownloadHistoryDto> getDownloadHistoryById(@PathVariable Long id) {
+    public ResponseEntity<DownloadHistoryResponse> getDownloadHistoryById(@PathVariable Long id) {
         return downloadHistoryService.getDownloadHistoryById(id)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
@@ -42,8 +44,8 @@ public class DownloadHistoryController {
     @ApiResponse(responseCode = "201", description = "Download history created")
     @PostMapping
     @PreAuthorize("hasRole('USER')")
-    public ResponseEntity<DownloadHistoryDto> createDownloadHistory(@Valid @RequestBody DownloadHistoryDto downloadHistoryDto) {
-        DownloadHistoryDto created = downloadHistoryService.createDownloadHistory(downloadHistoryDto);
+    public ResponseEntity<DownloadHistoryResponse> createDownloadHistory(@Valid @RequestBody DownloadHistoryRequest request) {
+        DownloadHistoryResponse created = downloadHistoryService.createDownloadHistory(request);
         return ResponseEntity.status(HttpStatus.CREATED).body(created);
     }
 
@@ -54,8 +56,8 @@ public class DownloadHistoryController {
     })
     @PutMapping("/{id}")
     @PreAuthorize("hasRole('USER')")
-    public ResponseEntity<DownloadHistoryDto> updateDownloadHistory(@PathVariable Long id, @Valid @RequestBody DownloadHistoryDto downloadHistoryDto) {
-        DownloadHistoryDto updated = downloadHistoryService.updateDownloadHistory(id, downloadHistoryDto);
+    public ResponseEntity<DownloadHistoryResponse> updateDownloadHistory(@PathVariable Long id, @Valid @RequestBody DownloadHistoryRequest request) {
+        DownloadHistoryResponse updated = downloadHistoryService.updateDownloadHistory(id, request);
         return ResponseEntity.ok(updated);
     }
 
@@ -71,4 +73,3 @@ public class DownloadHistoryController {
         return ResponseEntity.noContent().build();
     }
 }
-

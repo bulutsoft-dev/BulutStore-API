@@ -1,5 +1,8 @@
 package com.bulutsoft.bulutstore.service;
 
+import com.bulutsoft.bulutstore.request.DownloadHistoryRequest;
+import com.bulutsoft.bulutstore.response.DownloadHistoryResponse;
+
 import java.util.List;
 import java.util.Optional;
 
@@ -9,11 +12,11 @@ import java.util.Optional;
  * Tüm işlemler DownloadHistoryDto ile yapılır.
  */
 public interface DownloadHistoryService {
-    List<DownloadHistoryDto> getAllDownloadHistories();
-    Optional<DownloadHistoryDto> getDownloadHistoryById(Long id);
-    DownloadHistoryDto createDownloadHistory(DownloadHistoryDto downloadHistoryDto);
-    DownloadHistoryDto updateDownloadHistory(Long id, DownloadHistoryDto downloadHistoryDto);
+    List<DownloadHistoryResponse> getAllDownloadHistories();
+    Optional<DownloadHistoryResponse> getDownloadHistoryById(Long id);
+    DownloadHistoryResponse createDownloadHistory(DownloadHistoryRequest request);
+    DownloadHistoryResponse updateDownloadHistory(Long id, DownloadHistoryRequest request);
     void deleteDownloadHistory(Long id);
-    List<DownloadHistoryDto> getDownloadHistoriesByUser(Long userId);
-    List<DownloadHistoryDto> getDownloadHistoriesByApp(Long appId);
+    List<DownloadHistoryResponse> getDownloadHistoriesByUser(Long userId);
+    List<DownloadHistoryResponse> getDownloadHistoriesByApp(Long appId);
 }
