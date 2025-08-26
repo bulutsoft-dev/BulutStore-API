@@ -1,5 +1,7 @@
 package com.bulutsoft.bulutstore.controller;
 
+import com.bulutsoft.bulutstore.request.AppVersionRequest;
+import com.bulutsoft.bulutstore.response.AppVersionResponse;
 import com.bulutsoft.bulutstore.service.AppVersionService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -22,7 +24,7 @@ public class AppVersionController {
     @Operation(summary = "Get all app versions")
     @ApiResponse(responseCode = "200", description = "List of app versions")
     @GetMapping
-    public ResponseEntity<List<AppVersionDto>> getAllAppVersions() {
+    public ResponseEntity<List<AppVersionResponse>> getAllAppVersions() {
         return ResponseEntity.ok(appVersionService.getAllAppVersions());
     }
 
@@ -32,7 +34,7 @@ public class AppVersionController {
         @ApiResponse(responseCode = "404", description = "App version not found")
     })
     @GetMapping("/{id}")
-    public ResponseEntity<AppVersionDto> getAppVersionById(@PathVariable Long id) {
+    public ResponseEntity<AppVersionResponse> getAppVersionById(@PathVariable Long id) {
         return appVersionService.getAppVersionById(id)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
@@ -42,8 +44,8 @@ public class AppVersionController {
     @ApiResponse(responseCode = "201", description = "App version created")
     @PostMapping
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<AppVersionDto> createAppVersion(@Valid @RequestBody AppVersionDto appVersionDto) {
-        AppVersionDto created = appVersionService.createAppVersion(appVersionDto);
+    public ResponseEntity<AppVersionResponse> createAppVersion(@Valid @RequestBody AppVersionRequest appVersionRequest) {
+        AppVersionResponse created = appVersionService.createAppVersion(appVersionRequest);
         return ResponseEntity.status(HttpStatus.CREATED).body(created);
     }
 
@@ -54,8 +56,8 @@ public class AppVersionController {
     })
     @PutMapping("/{id}")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<AppVersionDto> updateAppVersion(@PathVariable Long id, @Valid @RequestBody AppVersionDto appVersionDto) {
-        AppVersionDto updated = appVersionService.updateAppVersion(id, appVersionDto);
+    public ResponseEntity<AppVersionResponse> updateAppVersion(@PathVariable Long id, @Valid @RequestBody AppVersionRequest appVersionRequest) {
+        AppVersionResponse updated = appVersionService.updateAppVersion(id, appVersionRequest);
         return ResponseEntity.ok(updated);
     }
 

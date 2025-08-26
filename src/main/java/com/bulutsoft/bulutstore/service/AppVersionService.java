@@ -1,5 +1,8 @@
 package com.bulutsoft.bulutstore.service;
 
+import com.bulutsoft.bulutstore.request.AppVersionRequest;
+import com.bulutsoft.bulutstore.response.AppVersionResponse;
+
 import java.util.List;
 import java.util.Optional;
 
@@ -9,10 +12,10 @@ import java.util.Optional;
  * Tüm işlemler AppVersionDto ile yapılır.
  */
 public interface AppVersionService {
-    List<AppVersionDto> getAllAppVersions();
-    Optional<AppVersionDto> getAppVersionById(Long id);
-    AppVersionDto createAppVersion(AppVersionDto appVersionDto);
-    AppVersionDto updateAppVersion(Long id, AppVersionDto appVersionDto);
+    List<AppVersionResponse> getAllAppVersions();
+    Optional<AppVersionResponse> getAppVersionById(Long id);
+    AppVersionResponse createAppVersion(AppVersionRequest request);
+    AppVersionResponse updateAppVersion(Long id, AppVersionRequest request);
     void deleteAppVersion(Long id);
-    List<AppVersionDto> getAppVersionsByApp(Long appId);
+    List<AppVersionResponse> getAppVersionsByApp(Long appId);
 }
