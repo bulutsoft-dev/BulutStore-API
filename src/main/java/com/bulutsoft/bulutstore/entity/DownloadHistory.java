@@ -1,5 +1,11 @@
 package com.bulutsoft.bulutstore.entity;
 
+/**
+ * Uygulama indirme geçmişi entity'si.
+ * Kullanıcıların hangi uygulamayı ne zaman indirdiğini tutar.
+ * Hem istatistik hem de kullanıcı geçmişi için kullanılır.
+ * downloadedAt alanı otomatik atanır.
+ */
 import jakarta.persistence.*;
 import lombok.*;
 import java.time.LocalDateTime;
@@ -12,23 +18,29 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @Builder
 public class DownloadHistory {
+    /** Benzersiz indirme kaydı ID'si */
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    /** İndirilen uygulama */
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "app_id", nullable = false)
     private App app;
 
+    /** İndiren kullanıcı (anonim indirme için null olabilir) */
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id") // nullable → anonymous download
+    @JoinColumn(name = "user_id")
     private User user;
 
+    /** İndirme zamanı */
     private LocalDateTime downloadedAt;
 
+    /**
+     * Kayıt eklenmeden önce downloadedAt alanını ayarlar.
+     */
     @PrePersist
     public void prePersist() {
         this.downloadedAt = LocalDateTime.now();
     }
 }
-

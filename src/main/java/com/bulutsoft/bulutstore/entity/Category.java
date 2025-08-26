@@ -1,5 +1,10 @@
 package com.bulutsoft.bulutstore.entity;
 
+/**
+ * Uygulama kategorisi entity'si.
+ * Uygulamalar, bir kategoriye ait olabilir.
+ * Kategori adı benzersizdir.
+ */
 import jakarta.persistence.*;
 import lombok.*;
 import java.util.List;
@@ -12,14 +17,16 @@ import java.util.List;
 @AllArgsConstructor
 @Builder
 public class Category {
+    /** Benzersiz kategori ID'si */
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    /** Benzersiz kategori adı */
     @Column(nullable = false, unique = true, length = 50)
     private String name;
 
+    /** Bu kategoriye ait uygulamalar */
     @OneToMany(mappedBy = "category", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<App> apps;
 }
-
