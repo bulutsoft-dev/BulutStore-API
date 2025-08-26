@@ -1,6 +1,5 @@
 package com.bulutsoft.bulutstore.service;
 
-import com.bulutsoft.bulutstore.dto.CategoryDto;
 import java.util.List;
 import java.util.Optional;
 

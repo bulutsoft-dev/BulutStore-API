@@ -1,6 +1,5 @@
 package com.bulutsoft.bulutstore.controller;
 
-import com.bulutsoft.bulutstore.dto.ReviewDto;
 import com.bulutsoft.bulutstore.service.ReviewService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;

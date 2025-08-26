@@ -1,10 +1,11 @@
 package com.bulutsoft.bulutstore.service.impl;
 
-import com.bulutsoft.bulutstore.dto.TagDto;
 import com.bulutsoft.bulutstore.entity.Tag;
 import com.bulutsoft.bulutstore.mapper.TagMapper;
 import com.bulutsoft.bulutstore.repos.TagRepository;
 import com.bulutsoft.bulutstore.service.TagService;
+import com.bulutsoft.bulutstore.request.TagRequest;
+import com.bulutsoft.bulutstore.response.TagResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -27,28 +28,28 @@ public class TagServiceImpl implements TagService {
     }
 
     @Override
-    public List<TagDto> getAllTags() {
-        return tagMapper.toDtoList(tagRepository.findAll());
+    public List<TagResponse> getAllTags() {
+        return tagMapper.toResponseList(tagRepository.findAll());
     }
 
     @Override
-    public Optional<TagDto> getTagById(Long id) {
-        return tagRepository.findById(id).map(tagMapper::toDto);
-    }
-
-    @Override
-    @Transactional
-    public TagDto createTag(TagDto tagDto) {
-        Tag tag = tagMapper.toEntity(tagDto);
-        return tagMapper.toDto(tagRepository.save(tag));
+    public Optional<TagResponse> getTagById(Long id) {
+        return tagRepository.findById(id).map(tagMapper::toResponse);
     }
 
     @Override
     @Transactional
-    public TagDto updateTag(Long id, TagDto tagDto) {
-        Tag tag = tagMapper.toEntity(tagDto);
+    public TagResponse createTag(TagRequest tagRequest) {
+        Tag tag = tagMapper.toEntity(tagRequest);
+        return tagMapper.toResponse(tagRepository.save(tag));
+    }
+
+    @Override
+    @Transactional
+    public TagResponse updateTag(Long id, TagRequest tagRequest) {
+        Tag tag = tagMapper.toEntity(tagRequest);
         tag.setId(id);
-        return tagMapper.toDto(tagRepository.save(tag));
+        return tagMapper.toResponse(tagRepository.save(tag));
     }
 
     @Override
@@ -58,7 +59,7 @@ public class TagServiceImpl implements TagService {
     }
 
     @Override
-    public Optional<TagDto> getTagByName(String name) {
-        return tagRepository.findByName(name).map(tagMapper::toDto);
+    public Optional<TagResponse> getTagByName(String name) {
+        return tagRepository.findByName(name).map(tagMapper::toResponse);
     }
 }

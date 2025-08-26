@@ -1,6 +1,8 @@
 package com.bulutsoft.bulutstore.service;
 
-import com.bulutsoft.bulutstore.dto.UserDto;
+import com.bulutsoft.bulutstore.request.UserCreateRequest;
+import com.bulutsoft.bulutstore.request.UserUpdateRequest;
+import com.bulutsoft.bulutstore.response.UserResponse;
 import java.util.List;
 import java.util.Optional;
 
@@ -13,22 +15,22 @@ public interface UserService {
     /**
      * Tüm kullanıcıları döndürür.
      */
-    List<UserDto> getAllUsers();
+    List<UserResponse> getAllUsers();
 
     /**
      * ID ile kullanıcıyı bulur.
      */
-    Optional<UserDto> getUserById(Long id);
+    Optional<UserResponse> getUserById(Long id);
 
     /**
      * Yeni kullanıcı kaydeder.
      */
-    UserDto createUser(UserDto userDto);
+    UserResponse createUser(UserCreateRequest request);
 
     /**
      * Kullanıcıyı günceller.
      */
-    UserDto updateUser(Long id, UserDto userDto);
+    UserResponse updateUser(Long id, UserUpdateRequest request);
 
     /**
      * Kullanıcıyı siler.
@@ -38,10 +40,10 @@ public interface UserService {
     /**
      * Kullanıcı adı ile arama yapar.
      */
-    Optional<UserDto> getUserByUsername(String username);
+    Optional<UserResponse> getUserByUsername(String username);
 
     /**
      * E-posta ile arama yapar.
      */
-    Optional<UserDto> getUserByEmail(String email);
+    Optional<UserResponse> getUserByEmail(String email);
 }

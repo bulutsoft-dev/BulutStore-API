@@ -1,6 +1,5 @@
 package com.bulutsoft.bulutstore.service.impl;
 
-import com.bulutsoft.bulutstore.dto.DownloadHistoryDto;
 import com.bulutsoft.bulutstore.entity.DownloadHistory;
 import com.bulutsoft.bulutstore.entity.App;
 import com.bulutsoft.bulutstore.entity.User;

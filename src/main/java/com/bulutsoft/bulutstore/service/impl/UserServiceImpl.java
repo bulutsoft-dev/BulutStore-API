@@ -1,6 +1,8 @@
 package com.bulutsoft.bulutstore.service.impl;
 
-import com.bulutsoft.bulutstore.dto.UserDto;
+import com.bulutsoft.bulutstore.request.UserCreateRequest;
+import com.bulutsoft.bulutstore.request.UserUpdateRequest;
+import com.bulutsoft.bulutstore.response.UserResponse;
 import com.bulutsoft.bulutstore.entity.User;
 import com.bulutsoft.bulutstore.mapper.UserMapper;
 import com.bulutsoft.bulutstore.repos.UserRepository;
@@ -8,6 +10,7 @@ import com.bulutsoft.bulutstore.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
 import java.util.List;
 import java.util.Optional;
 
@@ -27,28 +30,31 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public List<UserDto> getAllUsers() {
-        return userMapper.toDtoList(userRepository.findAll());
+    public List<UserResponse> getAllUsers() {
+        return userMapper.toResponseList(userRepository.findAll());
     }
 
     @Override
-    public Optional<UserDto> getUserById(Long id) {
-        return userRepository.findById(id).map(userMapper::toDto);
-    }
-
-    @Override
-    @Transactional
-    public UserDto createUser(UserDto userDto) {
-        User user = userMapper.toEntity(userDto);
-        return userMapper.toDto(userRepository.save(user));
+    public Optional<UserResponse> getUserById(Long id) {
+        return userRepository.findById(id).map(userMapper::toResponse);
     }
 
     @Override
     @Transactional
-    public UserDto updateUser(Long id, UserDto userDto) {
-        User user = userMapper.toEntity(userDto);
-        user.setId(id);
-        return userMapper.toDto(userRepository.save(user));
+    public UserResponse createUser(UserCreateRequest request) {
+        User user = userMapper.toEntity(request);
+        // Şifre hashleme işlemi burada yapılmalı (ör: passwordEncoder.encode(request.getPassword()))
+        // user.setPassword(...);
+        return userMapper.toResponse(userRepository.save(user));
+    }
+
+    @Override
+    @Transactional
+    public UserResponse updateUser(Long id, UserUpdateRequest request) {
+        User user = userRepository.findById(id).orElseThrow(() -> new RuntimeException("User not found"));
+        userMapper.updateEntityFromRequest(request, user);
+        // Şifre güncellemesi gerekiyorsa burada yapılmalı
+        return userMapper.toResponse(userRepository.save(user));
     }
 
     @Override
@@ -58,12 +64,12 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Optional<UserDto> getUserByUsername(String username) {
-        return userRepository.findByUsername(username).map(userMapper::toDto);
+    public Optional<UserResponse> getUserByUsername(String username) {
+        return userRepository.findByUsername(username).map(userMapper::toResponse);
     }
 
     @Override
-    public Optional<UserDto> getUserByEmail(String email) {
-        return userRepository.findByEmail(email).map(userMapper::toDto);
+    public Optional<UserResponse> getUserByEmail(String email) {
+        return userRepository.findByEmail(email).map(userMapper::toResponse);
     }
 }

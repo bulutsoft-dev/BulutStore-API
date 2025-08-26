@@ -1,6 +1,5 @@
 package com.bulutsoft.bulutstore.service.impl;
 
-import com.bulutsoft.bulutstore.dto.CategoryDto;
 import com.bulutsoft.bulutstore.entity.Category;
 import com.bulutsoft.bulutstore.mapper.CategoryMapper;
 import com.bulutsoft.bulutstore.repos.CategoryRepository;

@@ -1,7 +1,8 @@
 package com.bulutsoft.bulutstore.mapper;
 
-import com.bulutsoft.bulutstore.dto.TagDto;
 import com.bulutsoft.bulutstore.entity.Tag;
+import com.bulutsoft.bulutstore.request.TagRequest;
+import com.bulutsoft.bulutstore.response.TagResponse;
 import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;
 import java.util.List;
@@ -12,9 +13,8 @@ import java.util.List;
 @Mapper(componentModel = "spring")
 public interface TagMapper {
     TagMapper INSTANCE = Mappers.getMapper(TagMapper.class);
-    TagDto toDto(Tag tag);
-    Tag toEntity(TagDto tagDto);
-    List<TagDto> toDtoList(List<Tag> tags);
-    List<Tag> toEntityList(List<TagDto> tagDtos);
+    TagResponse toResponse(Tag tag);
+    Tag toEntity(TagRequest tagRequest);
+    List<TagResponse> toResponseList(List<Tag> tags);
+    List<Tag> toEntityList(List<TagRequest> tagRequests);
 }
-

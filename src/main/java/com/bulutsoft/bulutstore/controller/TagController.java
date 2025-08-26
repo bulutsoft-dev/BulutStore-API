@@ -1,6 +1,7 @@
 package com.bulutsoft.bulutstore.controller;
 
-import com.bulutsoft.bulutstore.dto.TagDto;
+import com.bulutsoft.bulutstore.request.TagRequest;
+import com.bulutsoft.bulutstore.response.TagResponse;
 import com.bulutsoft.bulutstore.service.TagService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -23,7 +24,7 @@ public class TagController {
     @Operation(summary = "Get all tags")
     @ApiResponse(responseCode = "200", description = "List of tags")
     @GetMapping
-    public ResponseEntity<List<TagDto>> getAllTags() {
+    public ResponseEntity<List<TagResponse>> getAllTags() {
         return ResponseEntity.ok(tagService.getAllTags());
     }
 
@@ -33,7 +34,7 @@ public class TagController {
         @ApiResponse(responseCode = "404", description = "Tag not found")
     })
     @GetMapping("/{id}")
-    public ResponseEntity<TagDto> getTagById(@PathVariable Long id) {
+    public ResponseEntity<TagResponse> getTagById(@PathVariable Long id) {
         return tagService.getTagById(id)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
@@ -43,8 +44,8 @@ public class TagController {
     @ApiResponse(responseCode = "201", description = "Tag created")
     @PostMapping
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<TagDto> createTag(@Valid @RequestBody TagDto tagDto) {
-        TagDto created = tagService.createTag(tagDto);
+    public ResponseEntity<TagResponse> createTag(@Valid @RequestBody TagRequest tagRequest) {
+        TagResponse created = tagService.createTag(tagRequest);
         return ResponseEntity.status(HttpStatus.CREATED).body(created);
     }
 
@@ -55,8 +56,8 @@ public class TagController {
     })
     @PutMapping("/{id}")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<TagDto> updateTag(@PathVariable Long id, @Valid @RequestBody TagDto tagDto) {
-        TagDto updated = tagService.updateTag(id, tagDto);
+    public ResponseEntity<TagResponse> updateTag(@PathVariable Long id, @Valid @RequestBody TagRequest tagRequest) {
+        TagResponse updated = tagService.updateTag(id, tagRequest);
         return ResponseEntity.ok(updated);
     }
 
@@ -72,4 +73,3 @@ public class TagController {
         return ResponseEntity.noContent().build();
     }
 }
-

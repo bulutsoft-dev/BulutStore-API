@@ -1,6 +1,8 @@
 package com.bulutsoft.bulutstore.controller;
 
-import com.bulutsoft.bulutstore.dto.UserDto;
+import com.bulutsoft.bulutstore.request.UserCreateRequest;
+import com.bulutsoft.bulutstore.request.UserUpdateRequest;
+import com.bulutsoft.bulutstore.response.UserResponse;
 import com.bulutsoft.bulutstore.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -24,7 +26,7 @@ public class UserController {
     @ApiResponse(responseCode = "200", description = "List of users")
     @GetMapping
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<List<UserDto>> getAllUsers() {
+    public ResponseEntity<List<UserResponse>> getAllUsers() {
         return ResponseEntity.ok(userService.getAllUsers());
     }
 
@@ -35,7 +37,7 @@ public class UserController {
     })
     @GetMapping("/{id}")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<UserDto> getUserById(@PathVariable Long id) {
+    public ResponseEntity<UserResponse> getUserById(@PathVariable Long id) {
         return userService.getUserById(id)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
@@ -45,8 +47,8 @@ public class UserController {
     @ApiResponse(responseCode = "201", description = "User created")
     @PostMapping
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<UserDto> createUser(@Valid @RequestBody UserDto userDto) {
-        UserDto created = userService.createUser(userDto);
+    public ResponseEntity<UserResponse> createUser(@Valid @RequestBody UserCreateRequest request) {
+        UserResponse created = userService.createUser(request);
         return ResponseEntity.status(HttpStatus.CREATED).body(created);
     }
 
@@ -57,8 +59,8 @@ public class UserController {
     })
     @PutMapping("/{id}")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<UserDto> updateUser(@PathVariable Long id, @Valid @RequestBody UserDto userDto) {
-        UserDto updated = userService.updateUser(id, userDto);
+    public ResponseEntity<UserResponse> updateUser(@PathVariable Long id, @Valid @RequestBody UserUpdateRequest request) {
+        UserResponse updated = userService.updateUser(id, request);
         return ResponseEntity.ok(updated);
     }
 

@@ -1,6 +1,5 @@
 package com.bulutsoft.bulutstore.mapper;
 
-import com.bulutsoft.bulutstore.dto.DownloadHistoryDto;
 import com.bulutsoft.bulutstore.entity.DownloadHistory;
 import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;

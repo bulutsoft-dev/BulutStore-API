@@ -1,6 +1,5 @@
 package com.bulutsoft.bulutstore.mapper;
 
-import com.bulutsoft.bulutstore.dto.ReviewDto;
 import com.bulutsoft.bulutstore.entity.Review;
 import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;

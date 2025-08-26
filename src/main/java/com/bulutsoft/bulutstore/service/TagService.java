@@ -1,6 +1,8 @@
 package com.bulutsoft.bulutstore.service;
 
-import com.bulutsoft.bulutstore.dto.TagDto;
+import com.bulutsoft.bulutstore.request.TagRequest;
+import com.bulutsoft.bulutstore.response.TagResponse;
+
 import java.util.List;
 import java.util.Optional;
 
@@ -10,10 +12,10 @@ import java.util.Optional;
  * Tüm işlemler TagDto ile yapılır.
  */
 public interface TagService {
-    List<TagDto> getAllTags();
-    Optional<TagDto> getTagById(Long id);
-    TagDto createTag(TagDto tagDto);
-    TagDto updateTag(Long id, TagDto tagDto);
+    List<TagResponse> getAllTags();
+    Optional<TagResponse> getTagById(Long id);
+    TagResponse createTag(TagRequest tagRequest);
+    TagResponse updateTag(Long id, TagRequest tagRequest);
     void deleteTag(Long id);
-    Optional<TagDto> getTagByName(String name);
+    Optional<TagResponse> getTagByName(String name);
 }

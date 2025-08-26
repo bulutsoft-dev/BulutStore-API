@@ -1,6 +1,5 @@
 package com.bulutsoft.bulutstore.controller;
 
-import com.bulutsoft.bulutstore.dto.DownloadHistoryDto;
 import com.bulutsoft.bulutstore.service.DownloadHistoryService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;

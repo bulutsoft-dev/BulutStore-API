@@ -1,6 +1,5 @@
 package com.bulutsoft.bulutstore.service.impl;
 
-import com.bulutsoft.bulutstore.dto.AppVersionDto;
 import com.bulutsoft.bulutstore.entity.AppVersion;
 import com.bulutsoft.bulutstore.entity.App;
 import com.bulutsoft.bulutstore.mapper.AppVersionMapper;

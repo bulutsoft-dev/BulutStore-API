@@ -1,6 +1,5 @@
 package com.bulutsoft.bulutstore.service.impl;
 
-import com.bulutsoft.bulutstore.dto.ReviewDto;
 import com.bulutsoft.bulutstore.entity.Review;
 import com.bulutsoft.bulutstore.entity.App;
 import com.bulutsoft.bulutstore.entity.User;

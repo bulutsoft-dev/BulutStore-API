@@ -1,7 +1,9 @@
 package com.bulutsoft.bulutstore.mapper;
 
-import com.bulutsoft.bulutstore.dto.UserDto;
 import com.bulutsoft.bulutstore.entity.User;
+import com.bulutsoft.bulutstore.request.UserCreateRequest;
+import com.bulutsoft.bulutstore.request.UserUpdateRequest;
+import com.bulutsoft.bulutstore.response.UserResponse;
 import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;
 import java.util.List;
@@ -12,9 +14,8 @@ import java.util.List;
 @Mapper(componentModel = "spring")
 public interface UserMapper {
     UserMapper INSTANCE = Mappers.getMapper(UserMapper.class);
-    UserDto toDto(User user);
-    User toEntity(UserDto userDto);
-    List<UserDto> toDtoList(List<User> users);
-    List<User> toEntityList(List<UserDto> userDtos);
+    UserResponse toResponse(User user);
+    List<UserResponse> toResponseList(List<User> users);
+    User toEntity(UserCreateRequest request);
+    void updateEntityFromRequest(UserUpdateRequest request, @org.mapstruct.MappingTarget User user);
 }
-

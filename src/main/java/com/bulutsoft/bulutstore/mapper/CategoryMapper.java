@@ -1,6 +1,5 @@
 package com.bulutsoft.bulutstore.mapper;
 
-import com.bulutsoft.bulutstore.dto.CategoryDto;
 import com.bulutsoft.bulutstore.entity.Category;
 import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;
