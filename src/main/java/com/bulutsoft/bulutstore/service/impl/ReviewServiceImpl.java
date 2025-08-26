@@ -8,6 +8,8 @@ import com.bulutsoft.bulutstore.repos.ReviewRepository;
 import com.bulutsoft.bulutstore.repos.AppRepository;
 import com.bulutsoft.bulutstore.repos.UserRepository;
 import com.bulutsoft.bulutstore.service.ReviewService;
+import com.bulutsoft.bulutstore.request.ReviewRequest;
+import com.bulutsoft.bulutstore.response.ReviewResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -34,40 +36,32 @@ public class ReviewServiceImpl implements ReviewService {
     }
 
     @Override
-    public List<ReviewDto> getAllReviews() {
-        return reviewMapper.toDtoList(reviewRepository.findAll());
+    public List<ReviewResponse> getAllReviews() {
+        return reviewMapper.toResponseList(reviewRepository.findAll());
     }
 
     @Override
-    public Optional<ReviewDto> getReviewById(Long id) {
-        return reviewRepository.findById(id).map(reviewMapper::toDto);
-    }
-
-    @Override
-    @Transactional
-    public ReviewDto createReview(ReviewDto reviewDto) {
-        Review review = reviewMapper.toEntity(reviewDto);
-        if (reviewDto.getApp() != null && reviewDto.getApp().getId() != null) {
-            appRepository.findById(reviewDto.getApp().getId()).ifPresent(review::setApp);
-        }
-        if (reviewDto.getUser() != null && reviewDto.getUser().getId() != null) {
-            userRepository.findById(reviewDto.getUser().getId()).ifPresent(review::setUser);
-        }
-        return reviewMapper.toDto(reviewRepository.save(review));
+    public Optional<ReviewResponse> getReviewById(Long id) {
+        return reviewRepository.findById(id).map(reviewMapper::toResponse);
     }
 
     @Override
     @Transactional
-    public ReviewDto updateReview(Long id, ReviewDto reviewDto) {
-        Review review = reviewMapper.toEntity(reviewDto);
+    public ReviewResponse createReview(ReviewRequest request) {
+        Review review = reviewMapper.toEntity(request);
+        appRepository.findById(request.getAppId()).ifPresent(review::setApp);
+        userRepository.findById(request.getUserId()).ifPresent(review::setUser);
+        return reviewMapper.toResponse(reviewRepository.save(review));
+    }
+
+    @Override
+    @Transactional
+    public ReviewResponse updateReview(Long id, ReviewRequest request) {
+        Review review = reviewMapper.toEntity(request);
         review.setId(id);
-        if (reviewDto.getApp() != null && reviewDto.getApp().getId() != null) {
-            appRepository.findById(reviewDto.getApp().getId()).ifPresent(review::setApp);
-        }
-        if (reviewDto.getUser() != null && reviewDto.getUser().getId() != null) {
-            userRepository.findById(reviewDto.getUser().getId()).ifPresent(review::setUser);
-        }
-        return reviewMapper.toDto(reviewRepository.save(review));
+        appRepository.findById(request.getAppId()).ifPresent(review::setApp);
+        userRepository.findById(request.getUserId()).ifPresent(review::setUser);
+        return reviewMapper.toResponse(reviewRepository.save(review));
     }
 
     @Override
@@ -77,23 +71,23 @@ public class ReviewServiceImpl implements ReviewService {
     }
 
     @Override
-    public List<ReviewDto> getReviewsByApp(Long appId) {
+    public List<ReviewResponse> getReviewsByApp(Long appId) {
         Optional<App> app = appRepository.findById(appId);
-        return app.map(a -> reviewMapper.toDtoList(reviewRepository.findByApp(a))).orElse(List.of());
+        return app.map(a -> reviewMapper.toResponseList(reviewRepository.findByApp(a))).orElse(List.of());
     }
 
     @Override
-    public List<ReviewDto> getReviewsByUser(Long userId) {
+    public List<ReviewResponse> getReviewsByUser(Long userId) {
         Optional<User> user = userRepository.findById(userId);
-        return user.map(u -> reviewMapper.toDtoList(reviewRepository.findByUser(u))).orElse(List.of());
+        return user.map(u -> reviewMapper.toResponseList(reviewRepository.findByUser(u))).orElse(List.of());
     }
 
     @Override
-    public Optional<ReviewDto> getReviewByAppAndUser(Long appId, Long userId) {
+    public Optional<ReviewResponse> getReviewByAppAndUser(Long appId, Long userId) {
         Optional<App> app = appRepository.findById(appId);
         Optional<User> user = userRepository.findById(userId);
         if (app.isPresent() && user.isPresent()) {
-            return reviewRepository.findByAppAndUser(app.get(), user.get()).map(reviewMapper::toDto);
+            return reviewRepository.findByAppAndUser(app.get(), user.get()).map(reviewMapper::toResponse);
         }
         return Optional.empty();
     }

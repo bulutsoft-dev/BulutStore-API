@@ -1,5 +1,7 @@
 package com.bulutsoft.bulutstore.controller;
 
+import com.bulutsoft.bulutstore.request.ReviewRequest;
+import com.bulutsoft.bulutstore.response.ReviewResponse;
 import com.bulutsoft.bulutstore.service.ReviewService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -22,7 +24,7 @@ public class ReviewController {
     @Operation(summary = "Get all reviews")
     @ApiResponse(responseCode = "200", description = "List of reviews")
     @GetMapping
-    public ResponseEntity<List<ReviewDto>> getAllReviews() {
+    public ResponseEntity<List<ReviewResponse>> getAllReviews() {
         return ResponseEntity.ok(reviewService.getAllReviews());
     }
 
@@ -32,7 +34,7 @@ public class ReviewController {
         @ApiResponse(responseCode = "404", description = "Review not found")
     })
     @GetMapping("/{id}")
-    public ResponseEntity<ReviewDto> getReviewById(@PathVariable Long id) {
+    public ResponseEntity<ReviewResponse> getReviewById(@PathVariable Long id) {
         return reviewService.getReviewById(id)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
@@ -42,8 +44,8 @@ public class ReviewController {
     @ApiResponse(responseCode = "201", description = "Review created")
     @PostMapping
     @PreAuthorize("hasRole('USER')")
-    public ResponseEntity<ReviewDto> createReview(@Valid @RequestBody ReviewDto reviewDto) {
-        ReviewDto created = reviewService.createReview(reviewDto);
+    public ResponseEntity<ReviewResponse> createReview(@Valid @RequestBody ReviewRequest reviewRequest) {
+        ReviewResponse created = reviewService.createReview(reviewRequest);
         return ResponseEntity.status(HttpStatus.CREATED).body(created);
     }
 
@@ -54,8 +56,8 @@ public class ReviewController {
     })
     @PutMapping("/{id}")
     @PreAuthorize("hasRole('USER')")
-    public ResponseEntity<ReviewDto> updateReview(@PathVariable Long id, @Valid @RequestBody ReviewDto reviewDto) {
-        ReviewDto updated = reviewService.updateReview(id, reviewDto);
+    public ResponseEntity<ReviewResponse> updateReview(@PathVariable Long id, @Valid @RequestBody ReviewRequest reviewRequest) {
+        ReviewResponse updated = reviewService.updateReview(id, reviewRequest);
         return ResponseEntity.ok(updated);
     }
 
@@ -71,4 +73,3 @@ public class ReviewController {
         return ResponseEntity.noContent().build();
     }
 }
-

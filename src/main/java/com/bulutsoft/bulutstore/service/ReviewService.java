@@ -1,5 +1,8 @@
 package com.bulutsoft.bulutstore.service;
 
+import com.bulutsoft.bulutstore.request.ReviewRequest;
+import com.bulutsoft.bulutstore.response.ReviewResponse;
+
 import java.util.List;
 import java.util.Optional;
 
@@ -9,12 +12,12 @@ import java.util.Optional;
  * Tüm işlemler ReviewDto ile yapılır.
  */
 public interface ReviewService {
-    List<ReviewDto> getAllReviews();
-    Optional<ReviewDto> getReviewById(Long id);
-    ReviewDto createReview(ReviewDto reviewDto);
-    ReviewDto updateReview(Long id, ReviewDto reviewDto);
+    List<ReviewResponse> getAllReviews();
+    Optional<ReviewResponse> getReviewById(Long id);
+    ReviewResponse createReview(ReviewRequest request);
+    ReviewResponse updateReview(Long id, ReviewRequest request);
     void deleteReview(Long id);
-    List<ReviewDto> getReviewsByApp(Long appId);
-    List<ReviewDto> getReviewsByUser(Long userId);
-    Optional<ReviewDto> getReviewByAppAndUser(Long appId, Long userId);
+    List<ReviewResponse> getReviewsByApp(Long appId);
+    List<ReviewResponse> getReviewsByUser(Long userId);
+    Optional<ReviewResponse> getReviewByAppAndUser(Long appId, Long userId);
 }
