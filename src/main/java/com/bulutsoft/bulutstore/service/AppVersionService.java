@@ -17,5 +17,4 @@ public interface AppVersionService {
     AppVersionResponse createAppVersion(AppVersionRequest request);
     AppVersionResponse updateAppVersion(Long id, AppVersionRequest request);
     void deleteAppVersion(Long id);
-    List<AppVersionResponse> getAppVersionsByApp(Long appId);
 }

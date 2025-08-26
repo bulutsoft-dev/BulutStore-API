@@ -36,14 +36,4 @@ public interface UserService {
      * Kullanıcıyı siler.
      */
     void deleteUser(Long id);
-
-    /**
-     * Kullanıcı adı ile arama yapar.
-     */
-    Optional<UserResponse> getUserByUsername(String username);
-
-    /**
-     * E-posta ile arama yapar.
-     */
-    Optional<UserResponse> getUserByEmail(String email);
 }

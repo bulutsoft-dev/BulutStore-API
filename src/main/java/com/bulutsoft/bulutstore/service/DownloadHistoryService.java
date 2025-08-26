@@ -17,6 +17,4 @@ public interface DownloadHistoryService {
     DownloadHistoryResponse createDownloadHistory(DownloadHistoryRequest request);
     DownloadHistoryResponse updateDownloadHistory(Long id, DownloadHistoryRequest request);
     void deleteDownloadHistory(Long id);
-    List<DownloadHistoryResponse> getDownloadHistoriesByUser(Long userId);
-    List<DownloadHistoryResponse> getDownloadHistoriesByApp(Long appId);
 }

@@ -57,9 +57,4 @@ public class TagServiceImpl implements TagService {
     public void deleteTag(Long id) {
         tagRepository.deleteById(id);
     }
-
-    @Override
-    public Optional<TagResponse> getTagByName(String name) {
-        return tagRepository.findByName(name).map(tagMapper::toResponse);
-    }
 }

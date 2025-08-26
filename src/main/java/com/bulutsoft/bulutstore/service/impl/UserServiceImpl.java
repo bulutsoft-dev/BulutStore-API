@@ -65,14 +65,4 @@ public class UserServiceImpl implements UserService {
     public void deleteUser(Long id) {
         userRepository.deleteById(id);
     }
-
-    @Override
-    public Optional<UserResponse> getUserByUsername(String username) {
-        return userRepository.findByUsername(username).map(userMapper::toResponse);
-    }
-
-    @Override
-    public Optional<UserResponse> getUserByEmail(String email) {
-        return userRepository.findByEmail(email).map(userMapper::toResponse);
-    }
 }

@@ -17,7 +17,4 @@ public interface ReviewService {
     ReviewResponse createReview(ReviewRequest request);
     ReviewResponse updateReview(Long id, ReviewRequest request);
     void deleteReview(Long id);
-    List<ReviewResponse> getReviewsByApp(Long appId);
-    List<ReviewResponse> getReviewsByUser(Long userId);
-    Optional<ReviewResponse> getReviewByAppAndUser(Long appId, Long userId);
 }

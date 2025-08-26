@@ -1,8 +1,6 @@
 package com.bulutsoft.bulutstore.service.impl;
 
 import com.bulutsoft.bulutstore.entity.DownloadHistory;
-import com.bulutsoft.bulutstore.entity.App;
-import com.bulutsoft.bulutstore.entity.User;
 import com.bulutsoft.bulutstore.mapper.DownloadHistoryMapper;
 import com.bulutsoft.bulutstore.repos.DownloadHistoryRepository;
 import com.bulutsoft.bulutstore.repos.AppRepository;
@@ -76,17 +74,5 @@ public class DownloadHistoryServiceImpl implements DownloadHistoryService {
     @Transactional
     public void deleteDownloadHistory(Long id) {
         downloadHistoryRepository.deleteById(id);
-    }
-
-    @Override
-    public List<DownloadHistoryResponse> getDownloadHistoriesByUser(Long userId) {
-        Optional<User> user = userRepository.findById(userId);
-        return user.map(u -> downloadHistoryMapper.toResponseList(downloadHistoryRepository.findByUser(u))).orElse(List.of());
-    }
-
-    @Override
-    public List<DownloadHistoryResponse> getDownloadHistoriesByApp(Long appId) {
-        Optional<App> app = appRepository.findById(appId);
-        return app.map(a -> downloadHistoryMapper.toResponseList(downloadHistoryRepository.findByApp(a))).orElse(List.of());
     }
 }

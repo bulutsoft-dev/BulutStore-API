@@ -17,5 +17,4 @@ public interface TagService {
     TagResponse createTag(TagRequest tagRequest);
     TagResponse updateTag(Long id, TagRequest tagRequest);
     void deleteTag(Long id);
-    Optional<TagResponse> getTagByName(String name);
 }
