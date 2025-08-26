@@ -4,7 +4,6 @@ import com.bulutsoft.bulutstore.entity.App;
 import com.bulutsoft.bulutstore.request.AppRequest;
 import com.bulutsoft.bulutstore.response.AppResponse;
 import org.mapstruct.Mapper;
-import org.mapstruct.factory.Mappers;
 import java.util.List;
 
 /**
@@ -13,7 +12,6 @@ import java.util.List;
  */
 @Mapper(componentModel = "spring", uses = {UserMapper.class, CategoryMapper.class, TagMapper.class, AppVersionMapper.class})
 public interface AppMapper {
-    AppMapper INSTANCE = Mappers.getMapper(AppMapper.class);
     AppResponse toResponse(App app);
     List<AppResponse> toResponseList(List<App> apps);
     App toEntity(AppRequest request);

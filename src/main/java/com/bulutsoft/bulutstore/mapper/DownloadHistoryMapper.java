@@ -4,7 +4,6 @@ import com.bulutsoft.bulutstore.entity.DownloadHistory;
 import com.bulutsoft.bulutstore.request.DownloadHistoryRequest;
 import com.bulutsoft.bulutstore.response.DownloadHistoryResponse;
 import org.mapstruct.Mapper;
-import org.mapstruct.factory.Mappers;
 import java.util.List;
 
 /**
@@ -13,7 +12,6 @@ import java.util.List;
  */
 @Mapper(componentModel = "spring", uses = {AppMapper.class, UserMapper.class})
 public interface DownloadHistoryMapper {
-    DownloadHistoryMapper INSTANCE = Mappers.getMapper(DownloadHistoryMapper.class);
     DownloadHistoryResponse toResponse(DownloadHistory downloadHistory);
     List<DownloadHistoryResponse> toResponseList(List<DownloadHistory> downloadHistories);
     DownloadHistory toEntity(DownloadHistoryRequest request);

@@ -16,5 +16,4 @@ public interface TagMapper {
     TagResponse toResponse(Tag tag);
     Tag toEntity(TagRequest tagRequest);
     List<TagResponse> toResponseList(List<Tag> tags);
-    List<Tag> toEntityList(List<TagRequest> tagRequests);
 }
