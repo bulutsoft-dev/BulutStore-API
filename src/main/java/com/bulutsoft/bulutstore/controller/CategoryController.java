@@ -1,5 +1,7 @@
 package com.bulutsoft.bulutstore.controller;
 
+import com.bulutsoft.bulutstore.request.CategoryRequest;
+import com.bulutsoft.bulutstore.response.CategoryResponse;
 import com.bulutsoft.bulutstore.service.CategoryService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -22,7 +24,7 @@ public class CategoryController {
     @Operation(summary = "Get all categories")
     @ApiResponse(responseCode = "200", description = "List of categories")
     @GetMapping
-    public ResponseEntity<List<CategoryDto>> getAllCategories() {
+    public ResponseEntity<List<CategoryResponse>> getAllCategories() {
         return ResponseEntity.ok(categoryService.getAllCategories());
     }
 
@@ -32,7 +34,7 @@ public class CategoryController {
         @ApiResponse(responseCode = "404", description = "Category not found")
     })
     @GetMapping("/{id}")
-    public ResponseEntity<CategoryDto> getCategoryById(@PathVariable Long id) {
+    public ResponseEntity<CategoryResponse> getCategoryById(@PathVariable Long id) {
         return categoryService.getCategoryById(id)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
@@ -42,8 +44,8 @@ public class CategoryController {
     @ApiResponse(responseCode = "201", description = "Category created")
     @PostMapping
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<CategoryDto> createCategory(@Valid @RequestBody CategoryDto categoryDto) {
-        CategoryDto created = categoryService.createCategory(categoryDto);
+    public ResponseEntity<CategoryResponse> createCategory(@Valid @RequestBody CategoryRequest categoryRequest) {
+        CategoryResponse created = categoryService.createCategory(categoryRequest);
         return ResponseEntity.status(HttpStatus.CREATED).body(created);
     }
 
@@ -54,8 +56,8 @@ public class CategoryController {
     })
     @PutMapping("/{id}")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<CategoryDto> updateCategory(@PathVariable Long id, @Valid @RequestBody CategoryDto categoryDto) {
-        CategoryDto updated = categoryService.updateCategory(id, categoryDto);
+    public ResponseEntity<CategoryResponse> updateCategory(@PathVariable Long id, @Valid @RequestBody CategoryRequest categoryRequest) {
+        CategoryResponse updated = categoryService.updateCategory(id, categoryRequest);
         return ResponseEntity.ok(updated);
     }
 
@@ -71,4 +73,3 @@ public class CategoryController {
         return ResponseEntity.noContent().build();
     }
 }
-

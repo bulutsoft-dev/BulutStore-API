@@ -1,5 +1,8 @@
 package com.bulutsoft.bulutstore.service;
 
+import com.bulutsoft.bulutstore.request.CategoryRequest;
+import com.bulutsoft.bulutstore.response.CategoryResponse;
+
 import java.util.List;
 import java.util.Optional;
 
@@ -9,10 +12,10 @@ import java.util.Optional;
  * Tüm işlemler CategoryDto ile yapılır.
  */
 public interface CategoryService {
-    List<CategoryDto> getAllCategories();
-    Optional<CategoryDto> getCategoryById(Long id);
-    CategoryDto createCategory(CategoryDto categoryDto);
-    CategoryDto updateCategory(Long id, CategoryDto categoryDto);
+    List<CategoryResponse> getAllCategories();
+    Optional<CategoryResponse> getCategoryById(Long id);
+    CategoryResponse createCategory(CategoryRequest request);
+    CategoryResponse updateCategory(Long id, CategoryRequest request);
     void deleteCategory(Long id);
-    Optional<CategoryDto> getCategoryByName(String name);
+    Optional<CategoryResponse> getCategoryByName(String name);
 }

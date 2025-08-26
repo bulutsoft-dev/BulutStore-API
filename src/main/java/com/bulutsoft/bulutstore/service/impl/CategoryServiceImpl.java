@@ -4,6 +4,8 @@ import com.bulutsoft.bulutstore.entity.Category;
 import com.bulutsoft.bulutstore.mapper.CategoryMapper;
 import com.bulutsoft.bulutstore.repos.CategoryRepository;
 import com.bulutsoft.bulutstore.service.CategoryService;
+import com.bulutsoft.bulutstore.request.CategoryRequest;
+import com.bulutsoft.bulutstore.response.CategoryResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -26,28 +28,28 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
-    public List<CategoryDto> getAllCategories() {
-        return categoryMapper.toDtoList(categoryRepository.findAll());
+    public List<CategoryResponse> getAllCategories() {
+        return categoryMapper.toResponseList(categoryRepository.findAll());
     }
 
     @Override
-    public Optional<CategoryDto> getCategoryById(Long id) {
-        return categoryRepository.findById(id).map(categoryMapper::toDto);
-    }
-
-    @Override
-    @Transactional
-    public CategoryDto createCategory(CategoryDto categoryDto) {
-        Category category = categoryMapper.toEntity(categoryDto);
-        return categoryMapper.toDto(categoryRepository.save(category));
+    public Optional<CategoryResponse> getCategoryById(Long id) {
+        return categoryRepository.findById(id).map(categoryMapper::toResponse);
     }
 
     @Override
     @Transactional
-    public CategoryDto updateCategory(Long id, CategoryDto categoryDto) {
-        Category category = categoryMapper.toEntity(categoryDto);
+    public CategoryResponse createCategory(CategoryRequest request) {
+        Category category = categoryMapper.toEntity(request);
+        return categoryMapper.toResponse(categoryRepository.save(category));
+    }
+
+    @Override
+    @Transactional
+    public CategoryResponse updateCategory(Long id, CategoryRequest request) {
+        Category category = categoryMapper.toEntity(request);
         category.setId(id);
-        return categoryMapper.toDto(categoryRepository.save(category));
+        return categoryMapper.toResponse(categoryRepository.save(category));
     }
 
     @Override
@@ -57,7 +59,7 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
-    public Optional<CategoryDto> getCategoryByName(String name) {
-        return categoryRepository.findByName(name).map(categoryMapper::toDto);
+    public Optional<CategoryResponse> getCategoryByName(String name) {
+        return categoryRepository.findByName(name).map(categoryMapper::toResponse);
     }
 }

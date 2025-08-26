@@ -1,6 +1,8 @@
 package com.bulutsoft.bulutstore.mapper;
 
 import com.bulutsoft.bulutstore.entity.Category;
+import com.bulutsoft.bulutstore.request.CategoryRequest;
+import com.bulutsoft.bulutstore.response.CategoryResponse;
 import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;
 import java.util.List;
@@ -11,9 +13,8 @@ import java.util.List;
 @Mapper(componentModel = "spring")
 public interface CategoryMapper {
     CategoryMapper INSTANCE = Mappers.getMapper(CategoryMapper.class);
-    CategoryDto toDto(Category category);
-    Category toEntity(CategoryDto categoryDto);
-    List<CategoryDto> toDtoList(List<Category> categories);
-    List<Category> toEntityList(List<CategoryDto> categoryDtos);
+    CategoryResponse toResponse(Category category);
+    Category toEntity(CategoryRequest request);
+    List<CategoryResponse> toResponseList(List<Category> categories);
+    List<Category> toEntityList(List<CategoryRequest> requests);
 }
-
