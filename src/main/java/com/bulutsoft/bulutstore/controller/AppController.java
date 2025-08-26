@@ -1,5 +1,7 @@
 package com.bulutsoft.bulutstore.controller;
 
+import com.bulutsoft.bulutstore.request.AppRequest;
+import com.bulutsoft.bulutstore.response.AppResponse;
 import com.bulutsoft.bulutstore.service.AppService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -22,7 +24,7 @@ public class AppController {
     @Operation(summary = "Get all apps")
     @ApiResponse(responseCode = "200", description = "List of apps")
     @GetMapping
-    public ResponseEntity<List<AppDto>> getAllApps() {
+    public ResponseEntity<List<AppResponse>> getAllApps() {
         return ResponseEntity.ok(appService.getAllApps());
     }
 
@@ -32,7 +34,7 @@ public class AppController {
             @ApiResponse(responseCode = "404", description = "App not found")
     })
     @GetMapping("/{id}")
-    public ResponseEntity<AppDto> getAppById(@PathVariable Long id) {
+    public ResponseEntity<AppResponse> getAppById(@PathVariable Long id) {
         return appService.getAppById(id)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
@@ -42,8 +44,8 @@ public class AppController {
     @ApiResponse(responseCode = "201", description = "App created")
     @PostMapping
     @PreAuthorize("hasRole('DEVELOPER') or hasRole('ADMIN')")
-    public ResponseEntity<AppDto> createApp(@Valid @RequestBody AppDto appDto) {
-        AppDto created = appService.createApp(appDto);
+    public ResponseEntity<AppResponse> createApp(@Valid @RequestBody AppRequest appRequest) {
+        AppResponse created = appService.createApp(appRequest);
         return ResponseEntity.status(HttpStatus.CREATED).body(created);
     }
 
@@ -54,8 +56,8 @@ public class AppController {
     })
     @PutMapping("/{id}")
     @PreAuthorize("hasRole('DEVELOPER') or hasRole('ADMIN')")
-    public ResponseEntity<AppDto> updateApp(@PathVariable Long id, @Valid @RequestBody AppDto appDto) {
-        AppDto updated = appService.updateApp(id, appDto);
+    public ResponseEntity<AppResponse> updateApp(@PathVariable Long id, @Valid @RequestBody AppRequest appRequest) {
+        AppResponse updated = appService.updateApp(id, appRequest);
         return ResponseEntity.ok(updated);
     }
 
@@ -74,21 +76,21 @@ public class AppController {
     @Operation(summary = "Get apps by developer id")
     @ApiResponse(responseCode = "200", description = "List of apps by developer")
     @GetMapping("/developer/{developerId}")
-    public ResponseEntity<List<AppDto>> getAppsByDeveloper(@PathVariable Long developerId) {
+    public ResponseEntity<List<AppResponse>> getAppsByDeveloper(@PathVariable Long developerId) {
         return ResponseEntity.ok(appService.getAppsByDeveloper(developerId));
     }
 
     @Operation(summary = "Get apps by category id")
     @ApiResponse(responseCode = "200", description = "List of apps by category")
     @GetMapping("/category/{categoryId}")
-    public ResponseEntity<List<AppDto>> getAppsByCategory(@PathVariable Long categoryId) {
+    public ResponseEntity<List<AppResponse>> getAppsByCategory(@PathVariable Long categoryId) {
         return ResponseEntity.ok(appService.getAppsByCategory(categoryId));
     }
 
     @Operation(summary = "Search apps by name")
     @ApiResponse(responseCode = "200", description = "List of apps matching name")
     @GetMapping("/search")
-    public ResponseEntity<List<AppDto>> searchAppsByName(@RequestParam String name) {
+    public ResponseEntity<List<AppResponse>> searchAppsByName(@RequestParam String name) {
         return ResponseEntity.ok(appService.searchAppsByName(name));
     }
 }

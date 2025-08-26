@@ -3,16 +3,21 @@ package com.bulutsoft.bulutstore.service.impl;
 import com.bulutsoft.bulutstore.entity.App;
 import com.bulutsoft.bulutstore.entity.User;
 import com.bulutsoft.bulutstore.entity.Category;
+import com.bulutsoft.bulutstore.entity.Tag;
 import com.bulutsoft.bulutstore.mapper.AppMapper;
 import com.bulutsoft.bulutstore.repos.AppRepository;
 import com.bulutsoft.bulutstore.repos.UserRepository;
 import com.bulutsoft.bulutstore.repos.CategoryRepository;
+import com.bulutsoft.bulutstore.repos.TagRepository;
 import com.bulutsoft.bulutstore.service.AppService;
+import com.bulutsoft.bulutstore.request.AppRequest;
+import com.bulutsoft.bulutstore.response.AppResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 /**
  * Uygulama işlemlerinin iş mantığını ve transaction yönetimini sağlayan servis implementasyonu.
@@ -23,52 +28,59 @@ public class AppServiceImpl implements AppService {
     private final AppRepository appRepository;
     private final UserRepository userRepository;
     private final CategoryRepository categoryRepository;
+    private final TagRepository tagRepository;
     private final AppMapper appMapper;
 
     @Autowired
-    public AppServiceImpl(AppRepository appRepository, UserRepository userRepository, CategoryRepository categoryRepository, AppMapper appMapper) {
+    public AppServiceImpl(AppRepository appRepository, UserRepository userRepository, CategoryRepository categoryRepository, TagRepository tagRepository, AppMapper appMapper) {
         this.appRepository = appRepository;
         this.userRepository = userRepository;
         this.categoryRepository = categoryRepository;
+        this.tagRepository = tagRepository;
         this.appMapper = appMapper;
     }
 
     @Override
-    public List<AppDto> getAllApps() {
-        return appMapper.toDtoList(appRepository.findAll());
+    public List<AppResponse> getAllApps() {
+        return appMapper.toResponseList(appRepository.findAll());
     }
 
     @Override
-    public Optional<AppDto> getAppById(Long id) {
-        return appRepository.findById(id).map(appMapper::toDto);
-    }
-
-    @Override
-    @Transactional
-    public AppDto createApp(AppDto appDto) {
-        App app = appMapper.toEntity(appDto);
-        // İlişkili developer ve category id'leri DTO'dan alınmalı, burada set edilebilir
-        if (appDto.getDeveloper() != null && appDto.getDeveloper().getId() != null) {
-            userRepository.findById(appDto.getDeveloper().getId()).ifPresent(app::setDeveloper);
-        }
-        if (appDto.getCategory() != null && appDto.getCategory().getId() != null) {
-            categoryRepository.findById(appDto.getCategory().getId()).ifPresent(app::setCategory);
-        }
-        return appMapper.toDto(appRepository.save(app));
+    public Optional<AppResponse> getAppById(Long id) {
+        return appRepository.findById(id).map(appMapper::toResponse);
     }
 
     @Override
     @Transactional
-    public AppDto updateApp(Long id, AppDto appDto) {
-        App app = appMapper.toEntity(appDto);
+    public AppResponse createApp(AppRequest request) {
+        App app = appMapper.toEntity(request);
+        userRepository.findById(request.getDeveloperId()).ifPresent(app::setDeveloper);
+        categoryRepository.findById(request.getCategoryId()).ifPresent(app::setCategory);
+        if (request.getTagIds() != null) {
+            app.setTags(request.getTagIds().stream()
+                .map(tagRepository::findById)
+                .filter(Optional::isPresent)
+                .map(Optional::get)
+                .collect(Collectors.toList()));
+        }
+        return appMapper.toResponse(appRepository.save(app));
+    }
+
+    @Override
+    @Transactional
+    public AppResponse updateApp(Long id, AppRequest request) {
+        App app = appMapper.toEntity(request);
         app.setId(id);
-        if (appDto.getDeveloper() != null && appDto.getDeveloper().getId() != null) {
-            userRepository.findById(appDto.getDeveloper().getId()).ifPresent(app::setDeveloper);
+        userRepository.findById(request.getDeveloperId()).ifPresent(app::setDeveloper);
+        categoryRepository.findById(request.getCategoryId()).ifPresent(app::setCategory);
+        if (request.getTagIds() != null) {
+            app.setTags(request.getTagIds().stream()
+                .map(tagRepository::findById)
+                .filter(Optional::isPresent)
+                .map(Optional::get)
+                .collect(Collectors.toList()));
         }
-        if (appDto.getCategory() != null && appDto.getCategory().getId() != null) {
-            categoryRepository.findById(appDto.getCategory().getId()).ifPresent(app::setCategory);
-        }
-        return appMapper.toDto(appRepository.save(app));
+        return appMapper.toResponse(appRepository.save(app));
     }
 
     @Override
@@ -78,19 +90,19 @@ public class AppServiceImpl implements AppService {
     }
 
     @Override
-    public List<AppDto> getAppsByDeveloper(Long developerId) {
+    public List<AppResponse> getAppsByDeveloper(Long developerId) {
         Optional<User> developer = userRepository.findById(developerId);
-        return developer.map(user -> appMapper.toDtoList(appRepository.findByDeveloper(user))).orElse(List.of());
+        return developer.map(user -> appMapper.toResponseList(appRepository.findByDeveloper(user))).orElse(List.of());
     }
 
     @Override
-    public List<AppDto> getAppsByCategory(Long categoryId) {
+    public List<AppResponse> getAppsByCategory(Long categoryId) {
         Optional<Category> category = categoryRepository.findById(categoryId);
-        return category.map(cat -> appMapper.toDtoList(appRepository.findByCategory(cat))).orElse(List.of());
+        return category.map(cat -> appMapper.toResponseList(appRepository.findByCategory(cat))).orElse(List.of());
     }
 
     @Override
-    public List<AppDto> searchAppsByName(String name) {
-        return appMapper.toDtoList(appRepository.findByNameContainingIgnoreCase(name));
+    public List<AppResponse> searchAppsByName(String name) {
+        return appMapper.toResponseList(appRepository.findByNameContainingIgnoreCase(name));
     }
 }

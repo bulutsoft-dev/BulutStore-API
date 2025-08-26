@@ -1,5 +1,8 @@
 package com.bulutsoft.bulutstore.service;
 
+import com.bulutsoft.bulutstore.request.AppRequest;
+import com.bulutsoft.bulutstore.response.AppResponse;
+
 import java.util.List;
 import java.util.Optional;
 
@@ -9,12 +12,12 @@ import java.util.Optional;
  * Tüm işlemler AppDto ile yapılır.
  */
 public interface AppService {
-    List<AppDto> getAllApps();
-    Optional<AppDto> getAppById(Long id);
-    AppDto createApp(AppDto appDto);
-    AppDto updateApp(Long id, AppDto appDto);
+    List<AppResponse> getAllApps();
+    Optional<AppResponse> getAppById(Long id);
+    AppResponse createApp(AppRequest request);
+    AppResponse updateApp(Long id, AppRequest request);
     void deleteApp(Long id);
-    List<AppDto> getAppsByDeveloper(Long developerId);
-    List<AppDto> getAppsByCategory(Long categoryId);
-    List<AppDto> searchAppsByName(String name);
+    List<AppResponse> getAppsByDeveloper(Long developerId);
+    List<AppResponse> getAppsByCategory(Long categoryId);
+    List<AppResponse> searchAppsByName(String name);
 }
