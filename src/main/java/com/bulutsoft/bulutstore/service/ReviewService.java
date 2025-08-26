@@ -1,23 +1,21 @@
 package com.bulutsoft.bulutstore.service;
 
-import com.bulutsoft.bulutstore.entity.Review;
-import com.bulutsoft.bulutstore.entity.App;
-import com.bulutsoft.bulutstore.entity.User;
+import com.bulutsoft.bulutstore.dto.ReviewDto;
 import java.util.List;
 import java.util.Optional;
 
 /**
  * Yorum işlemleri için servis arayüzü.
  * Temel CRUD ve uygulama/kullanıcıya özel iş mantığı metotlarını tanımlar.
+ * Tüm işlemler ReviewDto ile yapılır.
  */
 public interface ReviewService {
-    List<Review> getAllReviews();
-    Optional<Review> getReviewById(Long id);
-    Review createReview(Review review);
-    Review updateReview(Long id, Review review);
+    List<ReviewDto> getAllReviews();
+    Optional<ReviewDto> getReviewById(Long id);
+    ReviewDto createReview(ReviewDto reviewDto);
+    ReviewDto updateReview(Long id, ReviewDto reviewDto);
     void deleteReview(Long id);
-    List<Review> getReviewsByApp(App app);
-    List<Review> getReviewsByUser(User user);
-    Optional<Review> getReviewByAppAndUser(App app, User user);
+    List<ReviewDto> getReviewsByApp(Long appId);
+    List<ReviewDto> getReviewsByUser(Long userId);
+    Optional<ReviewDto> getReviewByAppAndUser(Long appId, Long userId);
 }
-

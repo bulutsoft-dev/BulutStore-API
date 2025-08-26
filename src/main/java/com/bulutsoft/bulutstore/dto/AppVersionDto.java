@@ -16,5 +16,8 @@ public class AppVersionDto {
     private String version;
     private String apkPath;
     private LocalDateTime releaseDate;
+    /**
+     * Sürümün ait olduğu uygulama (AppDto)
+     */
+    private AppDto app;
 }
-

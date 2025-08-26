@@ -1,19 +1,19 @@
 package com.bulutsoft.bulutstore.service;
 
-import com.bulutsoft.bulutstore.entity.Category;
+import com.bulutsoft.bulutstore.dto.CategoryDto;
 import java.util.List;
 import java.util.Optional;
 
 /**
  * Kategori işlemleri için servis arayüzü.
  * Temel CRUD ve kategoriye özel iş mantığı metotlarını tanımlar.
+ * Tüm işlemler CategoryDto ile yapılır.
  */
 public interface CategoryService {
-    List<Category> getAllCategories();
-    Optional<Category> getCategoryById(Long id);
-    Category createCategory(Category category);
-    Category updateCategory(Long id, Category category);
+    List<CategoryDto> getAllCategories();
+    Optional<CategoryDto> getCategoryById(Long id);
+    CategoryDto createCategory(CategoryDto categoryDto);
+    CategoryDto updateCategory(Long id, CategoryDto categoryDto);
     void deleteCategory(Long id);
-    Optional<Category> getCategoryByName(String name);
+    Optional<CategoryDto> getCategoryByName(String name);
 }
-

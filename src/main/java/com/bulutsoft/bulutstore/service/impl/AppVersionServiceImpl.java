@@ -1,8 +1,11 @@
 package com.bulutsoft.bulutstore.service.impl;
 
+import com.bulutsoft.bulutstore.dto.AppVersionDto;
 import com.bulutsoft.bulutstore.entity.AppVersion;
 import com.bulutsoft.bulutstore.entity.App;
+import com.bulutsoft.bulutstore.mapper.AppVersionMapper;
 import com.bulutsoft.bulutstore.repos.AppVersionRepository;
+import com.bulutsoft.bulutstore.repos.AppRepository;
 import com.bulutsoft.bulutstore.service.AppVersionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -12,37 +15,50 @@ import java.util.Optional;
 
 /**
  * Uygulama sürüm işlemlerinin iş mantığını ve transaction yönetimini sağlayan servis implementasyonu.
+ * DTO <-> Entity dönüşümleri AppVersionMapper ile yapılır.
  */
 @Service
 public class AppVersionServiceImpl implements AppVersionService {
     private final AppVersionRepository appVersionRepository;
+    private final AppRepository appRepository;
+    private final AppVersionMapper appVersionMapper;
 
     @Autowired
-    public AppVersionServiceImpl(AppVersionRepository appVersionRepository) {
+    public AppVersionServiceImpl(AppVersionRepository appVersionRepository, AppRepository appRepository, AppVersionMapper appVersionMapper) {
         this.appVersionRepository = appVersionRepository;
+        this.appRepository = appRepository;
+        this.appVersionMapper = appVersionMapper;
     }
 
     @Override
-    public List<AppVersion> getAllAppVersions() {
-        return appVersionRepository.findAll();
+    public List<AppVersionDto> getAllAppVersions() {
+        return appVersionMapper.toDtoList(appVersionRepository.findAll());
     }
 
     @Override
-    public Optional<AppVersion> getAppVersionById(Long id) {
-        return appVersionRepository.findById(id);
-    }
-
-    @Override
-    @Transactional
-    public AppVersion createAppVersion(AppVersion appVersion) {
-        return appVersionRepository.save(appVersion);
+    public Optional<AppVersionDto> getAppVersionById(Long id) {
+        return appVersionRepository.findById(id).map(appVersionMapper::toDto);
     }
 
     @Override
     @Transactional
-    public AppVersion updateAppVersion(Long id, AppVersion appVersion) {
+    public AppVersionDto createAppVersion(AppVersionDto appVersionDto) {
+        AppVersion appVersion = appVersionMapper.toEntity(appVersionDto);
+        if (appVersionDto.getApp() != null && appVersionDto.getApp().getId() != null) {
+            appRepository.findById(appVersionDto.getApp().getId()).ifPresent(appVersion::setApp);
+        }
+        return appVersionMapper.toDto(appVersionRepository.save(appVersion));
+    }
+
+    @Override
+    @Transactional
+    public AppVersionDto updateAppVersion(Long id, AppVersionDto appVersionDto) {
+        AppVersion appVersion = appVersionMapper.toEntity(appVersionDto);
         appVersion.setId(id);
-        return appVersionRepository.save(appVersion);
+        if (appVersionDto.getApp() != null && appVersionDto.getApp().getId() != null) {
+            appRepository.findById(appVersionDto.getApp().getId()).ifPresent(appVersion::setApp);
+        }
+        return appVersionMapper.toDto(appVersionRepository.save(appVersion));
     }
 
     @Override
@@ -52,8 +68,8 @@ public class AppVersionServiceImpl implements AppVersionService {
     }
 
     @Override
-    public List<AppVersion> getAppVersionsByApp(App app) {
-        return appVersionRepository.findByApp(app);
+    public List<AppVersionDto> getAppVersionsByApp(Long appId) {
+        Optional<App> app = appRepository.findById(appId);
+        return app.map(a -> appVersionMapper.toDtoList(appVersionRepository.findByApp(a))).orElse(List.of());
     }
 }
-

@@ -1,33 +1,34 @@
 package com.bulutsoft.bulutstore.service;
 
-import com.bulutsoft.bulutstore.entity.User;
+import com.bulutsoft.bulutstore.dto.UserDto;
 import java.util.List;
 import java.util.Optional;
 
 /**
  * Kullanıcı işlemleri için servis arayüzü.
  * Temel CRUD ve kullanıcıya özel iş mantığı metotlarını tanımlar.
+ * Tüm işlemler UserDto ile yapılır.
  */
 public interface UserService {
     /**
      * Tüm kullanıcıları döndürür.
      */
-    List<User> getAllUsers();
+    List<UserDto> getAllUsers();
 
     /**
      * ID ile kullanıcıyı bulur.
      */
-    Optional<User> getUserById(Long id);
+    Optional<UserDto> getUserById(Long id);
 
     /**
      * Yeni kullanıcı kaydeder.
      */
-    User createUser(User user);
+    UserDto createUser(UserDto userDto);
 
     /**
      * Kullanıcıyı günceller.
      */
-    User updateUser(Long id, User user);
+    UserDto updateUser(Long id, UserDto userDto);
 
     /**
      * Kullanıcıyı siler.
@@ -37,11 +38,10 @@ public interface UserService {
     /**
      * Kullanıcı adı ile arama yapar.
      */
-    Optional<User> getUserByUsername(String username);
+    Optional<UserDto> getUserByUsername(String username);
 
     /**
      * E-posta ile arama yapar.
      */
-    Optional<User> getUserByEmail(String email);
+    Optional<UserDto> getUserByEmail(String email);
 }
-

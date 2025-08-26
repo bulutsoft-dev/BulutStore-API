@@ -1,20 +1,19 @@
 package com.bulutsoft.bulutstore.service;
 
-import com.bulutsoft.bulutstore.entity.AppVersion;
-import com.bulutsoft.bulutstore.entity.App;
+import com.bulutsoft.bulutstore.dto.AppVersionDto;
 import java.util.List;
 import java.util.Optional;
 
 /**
  * Uygulama sürüm işlemleri için servis arayüzü.
  * Temel CRUD ve uygulamaya özel sürüm listeleme metotlarını tanımlar.
+ * Tüm işlemler AppVersionDto ile yapılır.
  */
 public interface AppVersionService {
-    List<AppVersion> getAllAppVersions();
-    Optional<AppVersion> getAppVersionById(Long id);
-    AppVersion createAppVersion(AppVersion appVersion);
-    AppVersion updateAppVersion(Long id, AppVersion appVersion);
+    List<AppVersionDto> getAllAppVersions();
+    Optional<AppVersionDto> getAppVersionById(Long id);
+    AppVersionDto createAppVersion(AppVersionDto appVersionDto);
+    AppVersionDto updateAppVersion(Long id, AppVersionDto appVersionDto);
     void deleteAppVersion(Long id);
-    List<AppVersion> getAppVersionsByApp(App app);
+    List<AppVersionDto> getAppVersionsByApp(Long appId);
 }
-

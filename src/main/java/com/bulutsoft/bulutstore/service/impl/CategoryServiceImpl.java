@@ -1,6 +1,8 @@
 package com.bulutsoft.bulutstore.service.impl;
 
+import com.bulutsoft.bulutstore.dto.CategoryDto;
 import com.bulutsoft.bulutstore.entity.Category;
+import com.bulutsoft.bulutstore.mapper.CategoryMapper;
 import com.bulutsoft.bulutstore.repos.CategoryRepository;
 import com.bulutsoft.bulutstore.service.CategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,37 +13,42 @@ import java.util.Optional;
 
 /**
  * Kategori işlemlerinin iş mantığını ve transaction yönetimini sağlayan servis implementasyonu.
+ * DTO <-> Entity dönüşümleri CategoryMapper ile yapılır.
  */
 @Service
 public class CategoryServiceImpl implements CategoryService {
     private final CategoryRepository categoryRepository;
+    private final CategoryMapper categoryMapper;
 
     @Autowired
-    public CategoryServiceImpl(CategoryRepository categoryRepository) {
+    public CategoryServiceImpl(CategoryRepository categoryRepository, CategoryMapper categoryMapper) {
         this.categoryRepository = categoryRepository;
+        this.categoryMapper = categoryMapper;
     }
 
     @Override
-    public List<Category> getAllCategories() {
-        return categoryRepository.findAll();
+    public List<CategoryDto> getAllCategories() {
+        return categoryMapper.toDtoList(categoryRepository.findAll());
     }
 
     @Override
-    public Optional<Category> getCategoryById(Long id) {
-        return categoryRepository.findById(id);
-    }
-
-    @Override
-    @Transactional
-    public Category createCategory(Category category) {
-        return categoryRepository.save(category);
+    public Optional<CategoryDto> getCategoryById(Long id) {
+        return categoryRepository.findById(id).map(categoryMapper::toDto);
     }
 
     @Override
     @Transactional
-    public Category updateCategory(Long id, Category category) {
+    public CategoryDto createCategory(CategoryDto categoryDto) {
+        Category category = categoryMapper.toEntity(categoryDto);
+        return categoryMapper.toDto(categoryRepository.save(category));
+    }
+
+    @Override
+    @Transactional
+    public CategoryDto updateCategory(Long id, CategoryDto categoryDto) {
+        Category category = categoryMapper.toEntity(categoryDto);
         category.setId(id);
-        return categoryRepository.save(category);
+        return categoryMapper.toDto(categoryRepository.save(category));
     }
 
     @Override
@@ -51,8 +58,7 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
-    public Optional<Category> getCategoryByName(String name) {
-        return categoryRepository.findByName(name);
+    public Optional<CategoryDto> getCategoryByName(String name) {
+        return categoryRepository.findByName(name).map(categoryMapper::toDto);
     }
 }
-
