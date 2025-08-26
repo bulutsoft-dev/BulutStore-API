@@ -93,5 +93,3 @@ public class AppController {
         return ResponseEntity.ok(appService.searchAppsByName(name));
     }
 }
-
-it
