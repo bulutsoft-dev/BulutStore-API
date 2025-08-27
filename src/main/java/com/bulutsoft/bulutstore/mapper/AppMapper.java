@@ -18,9 +18,11 @@ public interface AppMapper {
     @Mapping(source = "screenshotUrls", target = "screenshotUrls")
     @Mapping(source = "developer.displayName", target = "developerDisplayName")
     @Mapping(source = "developer.website", target = "developerWebsite")
+    @Mapping(source = "shortDescription", target = "shortDescription")
     AppResponse toResponse(App app);
     List<AppResponse> toResponseList(List<App> apps);
     @Mapping(source = "iconUrl", target = "iconUrl")
     @Mapping(source = "screenshotUrls", target = "screenshotUrls")
+    @Mapping(source = "shortDescription", target = "shortDescription")
     App toEntity(AppRequest request);
 }

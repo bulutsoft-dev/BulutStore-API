@@ -32,6 +32,10 @@ public class App {
     @Lob
     private String description;
 
+    /** Kısa açıklama (Play Store'daki gibi) */
+    @Column(length = 255)
+    private String shortDescription;
+
     /** Uygulamanın ait olduğu kategori */
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "category_id")

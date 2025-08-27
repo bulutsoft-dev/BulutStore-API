@@ -18,6 +18,7 @@ public class AppRequest {
     private List<Long> tagIds;
     private String iconUrl;
     private List<String> screenshotUrls;
+    private String shortDescription;
 
     public String getName() { return name; }
     public void setName(String name) { this.name = name; }
@@ -35,4 +36,6 @@ public class AppRequest {
     public void setIconUrl(String iconUrl) { this.iconUrl = iconUrl; }
     public List<String> getScreenshotUrls() { return screenshotUrls; }
     public void setScreenshotUrls(List<String> screenshotUrls) { this.screenshotUrls = screenshotUrls; }
+    public String getShortDescription() { return shortDescription; }
+    public void setShortDescription(String shortDescription) { this.shortDescription = shortDescription; }
 }

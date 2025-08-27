@@ -8,6 +8,7 @@ public class AppResponse {
     private Long id;
     private String name;
     private String description;
+    private String shortDescription;
     private Long categoryId;
     private Long developerId;
     private AppStatus status;
@@ -23,10 +24,11 @@ public class AppResponse {
 
     public AppResponse() {}
 
-    public AppResponse(Long id, String name, String description, Long categoryId, Long developerId, AppStatus status, Long downloadsCount, Double avgRating, List<Long> tagIds, LocalDateTime createdAt, LocalDateTime updatedAt, String iconUrl, List<String> screenshotUrls, String developerDisplayName, String developerWebsite) {
+    public AppResponse(Long id, String name, String description, String shortDescription, Long categoryId, Long developerId, AppStatus status, Long downloadsCount, Double avgRating, List<Long> tagIds, LocalDateTime createdAt, LocalDateTime updatedAt, String iconUrl, List<String> screenshotUrls, String developerDisplayName, String developerWebsite) {
         this.id = id;
         this.name = name;
         this.description = description;
+        this.shortDescription = shortDescription;
         this.categoryId = categoryId;
         this.developerId = developerId;
         this.status = status;
@@ -47,6 +49,8 @@ public class AppResponse {
     public void setName(String name) { this.name = name; }
     public String getDescription() { return description; }
     public void setDescription(String description) { this.description = description; }
+    public String getShortDescription() { return shortDescription; }
+    public void setShortDescription(String shortDescription) { this.shortDescription = shortDescription; }
     public Long getCategoryId() { return categoryId; }
     public void setCategoryId(Long categoryId) { this.categoryId = categoryId; }
     public Long getDeveloperId() { return developerId; }
