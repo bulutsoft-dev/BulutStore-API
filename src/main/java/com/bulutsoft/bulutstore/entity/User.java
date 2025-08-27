@@ -67,6 +67,10 @@ public class User {
     @Column(length = 255)
     private String website;
 
+    /** Kullanıcının developer başvuru metni */
+    @Column(length = 2000)
+    private String developerApplicationText;
+
     /**
      * Kayıt eklenmeden önce zaman damgalarını ayarlar.
      */

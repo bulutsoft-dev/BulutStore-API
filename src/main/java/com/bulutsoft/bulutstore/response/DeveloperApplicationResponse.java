@@ -12,5 +12,5 @@ import lombok.NoArgsConstructor;
 public class DeveloperApplicationResponse {
     private DeveloperApplicationStatus status;
     private LocalDateTime applicationDate;
+    private String applicationText;
 }
-

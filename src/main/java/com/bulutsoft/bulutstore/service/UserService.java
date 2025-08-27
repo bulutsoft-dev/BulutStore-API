@@ -38,7 +38,7 @@ public interface UserService {
     void deleteUser(Long id);
 
     /** Kullanıcı developer olmak için başvuru yapar */
-    void applyForDeveloper();
+    void applyForDeveloper(String applicationText);
 
     /** Bekleyen developer başvurularını döndürür */
     List<UserResponse> getPendingDeveloperApplications();

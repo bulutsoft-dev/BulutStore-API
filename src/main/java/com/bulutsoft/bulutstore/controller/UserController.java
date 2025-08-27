@@ -1,6 +1,7 @@
 package com.bulutsoft.bulutstore.controller;
 
 import com.bulutsoft.bulutstore.request.UserCreateRequest;
+import com.bulutsoft.bulutstore.request.UserDeveloperApplicationRequest;
 import com.bulutsoft.bulutstore.request.UserUpdateRequest;
 import com.bulutsoft.bulutstore.response.UserResponse;
 import com.bulutsoft.bulutstore.service.UserService;
@@ -79,8 +80,8 @@ public class UserController {
     @Operation(summary = "Kullanıcı developer olmak için başvuru yapar")
     @PostMapping("/apply-developer")
     @PreAuthorize("isAuthenticated()")
-    public ResponseEntity<String> applyForDeveloper() {
-        userService.applyForDeveloper();
+    public ResponseEntity<String> applyForDeveloper(@RequestBody @jakarta.validation.Valid UserDeveloperApplicationRequest request) {
+        userService.applyForDeveloper(request.getApplicationText());
         return ResponseEntity.ok("Developer başvurusu alındı.");
     }
 

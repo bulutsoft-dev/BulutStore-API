@@ -68,7 +68,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
-    public void applyForDeveloper() {
+    public void applyForDeveloper(String applicationText) {
         // Giriş yapan kullanıcıyı al
         String username = org.springframework.security.core.context.SecurityContextHolder.getContext().getAuthentication().getName();
         User user = userRepository.findByUsername(username).orElseThrow(() -> new RuntimeException("Kullanıcı bulunamadı"));
@@ -80,6 +80,7 @@ public class UserServiceImpl implements UserService {
         }
         user.setDeveloperApplicationStatus(com.bulutsoft.bulutstore.entity.DeveloperApplicationStatus.PENDING);
         user.setDeveloperApplicationDate(java.time.LocalDateTime.now());
+        user.setDeveloperApplicationText(applicationText);
         userRepository.save(user);
     }
 
@@ -119,7 +120,8 @@ public class UserServiceImpl implements UserService {
                 .orElseThrow(() -> new RuntimeException("Kullanıcı bulunamadı"));
         return new com.bulutsoft.bulutstore.response.DeveloperApplicationResponse(
                 user.getDeveloperApplicationStatus(),
-                user.getDeveloperApplicationDate()
+                user.getDeveloperApplicationDate(),
+                user.getDeveloperApplicationText()
         );
     }
 }
