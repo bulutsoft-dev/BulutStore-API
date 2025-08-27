@@ -6,6 +6,8 @@ import com.bulutsoft.bulutstore.repos.AppVersionRepository;
 import com.bulutsoft.bulutstore.service.AppVersionService;
 import com.bulutsoft.bulutstore.request.AppVersionRequest;
 import com.bulutsoft.bulutstore.response.AppVersionResponse;
+import com.bulutsoft.bulutstore.entity.App;
+import com.bulutsoft.bulutstore.repos.AppRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -20,11 +22,13 @@ import java.util.Optional;
 public class AppVersionServiceImpl implements AppVersionService {
     private final AppVersionRepository appVersionRepository;
     private final AppVersionMapper appVersionMapper;
+    private final AppRepository appRepository;
 
     @Autowired
-    public AppVersionServiceImpl(AppVersionRepository appVersionRepository, AppVersionMapper appVersionMapper) {
+    public AppVersionServiceImpl(AppVersionRepository appVersionRepository, AppVersionMapper appVersionMapper, AppRepository appRepository) {
         this.appVersionRepository = appVersionRepository;
         this.appVersionMapper = appVersionMapper;
+        this.appRepository = appRepository;
     }
 
     @Override
@@ -41,6 +45,9 @@ public class AppVersionServiceImpl implements AppVersionService {
     @Transactional
     public AppVersionResponse createAppVersion(AppVersionRequest request) {
         AppVersion appVersion = appVersionMapper.toEntity(request);
+        App app = appRepository.findById(request.getAppId())
+            .orElseThrow(() -> new RuntimeException("App not found"));
+        appVersion.setApp(app);
         return appVersionMapper.toResponse(appVersionRepository.save(appVersion));
     }
 
