@@ -18,10 +18,12 @@ public class CustomUserDetailsService implements UserDetailsService {
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         User user = userRepository.findByUsername(username)
                 .orElseThrow(() -> new UsernameNotFoundException("Kullanıcı bulunamadı: " + username));
+        if (user.getStatus() != com.bulutsoft.bulutstore.entity.UserStatus.ACTIVE) {
+            throw new UsernameNotFoundException("Kullanıcı aktif değil: " + username);
+        }
         UserBuilder builder = org.springframework.security.core.userdetails.User.withUsername(user.getUsername())
                 .password(user.getPassword())
                 .roles(user.getRole().name());
         return builder.build();
     }
 }
-
