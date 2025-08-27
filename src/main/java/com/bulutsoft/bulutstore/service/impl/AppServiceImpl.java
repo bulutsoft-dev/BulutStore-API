@@ -52,33 +52,46 @@ public class AppServiceImpl implements AppService {
 
     @Override
     @Transactional
-    public AppResponse createApp(AppRequest request) {
+    public AppResponse createApp(AppRequest request, String username) {
+        // Giriş yapan kullanıcıyı bul
+        User developer = userRepository.findByUsername(username)
+            .orElseThrow(() -> new IllegalArgumentException("Developer not found"));
+        if (developer.getRole() != com.bulutsoft.bulutstore.entity.Role.DEVELOPER ||
+            developer.getStatus() != com.bulutsoft.bulutstore.entity.UserStatus.ACTIVE) {
+            throw new IllegalArgumentException("User is not an active developer");
+        }
         App app = appMapper.toEntity(request);
-        userRepository.findById(request.getDeveloperId()).ifPresent(app::setDeveloper);
+        app.setDeveloper(developer);
         categoryRepository.findById(request.getCategoryId()).ifPresent(app::setCategory);
         if (request.getTagIds() != null) {
             app.setTags(request.getTagIds().stream()
                 .map(tagRepository::findById)
                 .filter(Optional::isPresent)
                 .map(Optional::get)
-                .collect(Collectors.toList()));
+                .collect(java.util.stream.Collectors.toList()));
         }
         return appMapper.toResponse(appRepository.save(app));
     }
 
     @Override
     @Transactional
-    public AppResponse updateApp(Long id, AppRequest request) {
+    public AppResponse updateApp(Long id, AppRequest request, String username) {
+        User developer = userRepository.findByUsername(username)
+            .orElseThrow(() -> new IllegalArgumentException("Developer not found"));
+        if (developer.getRole() != com.bulutsoft.bulutstore.entity.Role.DEVELOPER ||
+            developer.getStatus() != com.bulutsoft.bulutstore.entity.UserStatus.ACTIVE) {
+            throw new IllegalArgumentException("User is not an active developer");
+        }
         App app = appMapper.toEntity(request);
         app.setId(id);
-        userRepository.findById(request.getDeveloperId()).ifPresent(app::setDeveloper);
+        app.setDeveloper(developer);
         categoryRepository.findById(request.getCategoryId()).ifPresent(app::setCategory);
         if (request.getTagIds() != null) {
             app.setTags(request.getTagIds().stream()
                 .map(tagRepository::findById)
                 .filter(Optional::isPresent)
                 .map(Optional::get)
-                .collect(Collectors.toList()));
+                .collect(java.util.stream.Collectors.toList()));
         }
         return appMapper.toResponse(appRepository.save(app));
     }

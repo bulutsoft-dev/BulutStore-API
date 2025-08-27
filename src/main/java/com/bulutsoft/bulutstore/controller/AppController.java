@@ -45,7 +45,9 @@ public class AppController {
     @PostMapping
     @PreAuthorize("hasRole('DEVELOPER') or hasRole('ADMIN')")
     public ResponseEntity<AppResponse> createApp(@Valid @RequestBody AppRequest appRequest) {
-        AppResponse created = appService.createApp(appRequest);
+        // Giriş yapan kullanıcının kimliğini al
+        String username = org.springframework.security.core.context.SecurityContextHolder.getContext().getAuthentication().getName();
+        AppResponse created = appService.createApp(appRequest, username);
         return ResponseEntity.status(HttpStatus.CREATED).body(created);
     }
 
@@ -57,7 +59,8 @@ public class AppController {
     @PutMapping("/{id}")
     @PreAuthorize("hasRole('DEVELOPER') or hasRole('ADMIN')")
     public ResponseEntity<AppResponse> updateApp(@PathVariable Long id, @Valid @RequestBody AppRequest appRequest) {
-        AppResponse updated = appService.updateApp(id, appRequest);
+        String username = org.springframework.security.core.context.SecurityContextHolder.getContext().getAuthentication().getName();
+        AppResponse updated = appService.updateApp(id, appRequest, username);
         return ResponseEntity.ok(updated);
     }
 

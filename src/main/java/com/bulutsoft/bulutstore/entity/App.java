@@ -43,7 +43,7 @@ public class App {
 
     /** Uygulamanın geliştiricisi (User tablosundan) */
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "developer_id")
+    @JoinColumn(name = "developer_id", nullable = false)
     private User developer;
 
     /** Uygulamanın onay durumu (PENDING, APPROVED, REJECTED) */

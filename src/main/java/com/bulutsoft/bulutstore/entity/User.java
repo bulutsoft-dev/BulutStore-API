@@ -45,6 +45,15 @@ public class User {
     @Column(nullable = false, length = 20)
     private UserStatus status;
 
+    /** Kullanıcının developer başvurusu durumu (NONE, PENDING, APPROVED, REJECTED) */
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false, length = 20)
+    @Builder.Default
+    private DeveloperApplicationStatus developerApplicationStatus = DeveloperApplicationStatus.NONE;
+
+    /** Developer başvuru tarihi */
+    private LocalDateTime developerApplicationDate;
+
     /** Oluşturulma zamanı */
     private LocalDateTime createdAt;
     /** Son güncellenme zamanı */

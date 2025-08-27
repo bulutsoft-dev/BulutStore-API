@@ -36,4 +36,16 @@ public interface UserService {
      * Kullanıcıyı siler.
      */
     void deleteUser(Long id);
+
+    /** Kullanıcı developer olmak için başvuru yapar */
+    void applyForDeveloper();
+
+    /** Bekleyen developer başvurularını döndürür */
+    List<UserResponse> getPendingDeveloperApplications();
+
+    /** Admin: Developer başvurusunu onaylar */
+    void approveDeveloper(Long userId);
+
+    /** Admin: Developer başvurusunu reddeder */
+    void rejectDeveloper(Long userId);
 }

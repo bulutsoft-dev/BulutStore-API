@@ -75,4 +75,35 @@ public class UserController {
         userService.deleteUser(id);
         return ResponseEntity.noContent().build();
     }
+
+    @Operation(summary = "Kullanıcı developer olmak için başvuru yapar")
+    @PostMapping("/apply-developer")
+    @PreAuthorize("isAuthenticated()")
+    public ResponseEntity<String> applyForDeveloper() {
+        userService.applyForDeveloper();
+        return ResponseEntity.ok("Developer başvurusu alındı.");
+    }
+
+    @Operation(summary = "Admin: Developer başvurularını listeler")
+    @GetMapping("/developer-applications")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<List<UserResponse>> getDeveloperApplications() {
+        return ResponseEntity.ok(userService.getPendingDeveloperApplications());
+    }
+
+    @Operation(summary = "Admin: Developer başvurusunu onaylar")
+    @PostMapping("/approve-developer/{userId}")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<String> approveDeveloper(@PathVariable Long userId) {
+        userService.approveDeveloper(userId);
+        return ResponseEntity.ok("Developer başvurusu onaylandı.");
+    }
+
+    @Operation(summary = "Admin: Developer başvurusunu reddeder")
+    @PostMapping("/reject-developer/{userId}")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<String> rejectDeveloper(@PathVariable Long userId) {
+        userService.rejectDeveloper(userId);
+        return ResponseEntity.ok("Developer başvurusu reddedildi.");
+    }
 }

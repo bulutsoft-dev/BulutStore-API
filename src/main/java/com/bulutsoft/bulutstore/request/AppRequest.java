@@ -12,8 +12,7 @@ public class AppRequest {
     private String description;
     @NotNull
     private Long categoryId;
-    @NotNull
-    private Long developerId;
+    // developerId kaldırıldı, dışarıdan alınmayacak
     private AppStatus status;
     private List<Long> tagIds;
     private String iconUrl;
@@ -26,8 +25,8 @@ public class AppRequest {
     public void setDescription(String description) { this.description = description; }
     public Long getCategoryId() { return categoryId; }
     public void setCategoryId(Long categoryId) { this.categoryId = categoryId; }
-    public Long getDeveloperId() { return developerId; }
-    public void setDeveloperId(Long developerId) { this.developerId = developerId; }
+    public Long getDeveloperId() { return null; } // Artık kullanılmıyor
+    public void setDeveloperId(Long developerId) { /* Artık kullanılmıyor */ }
     public AppStatus getStatus() { return status; }
     public void setStatus(AppStatus status) { this.status = status; }
     public List<Long> getTagIds() { return tagIds; }

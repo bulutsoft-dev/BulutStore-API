@@ -65,4 +65,42 @@ public class UserServiceImpl implements UserService {
     public void deleteUser(Long id) {
         userRepository.deleteById(id);
     }
+
+    @Override
+    @Transactional
+    public void applyForDeveloper() {
+        // Giriş yapan kullanıcıyı al
+        String username = org.springframework.security.core.context.SecurityContextHolder.getContext().getAuthentication().getName();
+        User user = userRepository.findByUsername(username).orElseThrow(() -> new RuntimeException("Kullanıcı bulunamadı"));
+        if (user.getDeveloperApplicationStatus() == com.bulutsoft.bulutstore.entity.DeveloperApplicationStatus.PENDING) {
+            throw new RuntimeException("Zaten bekleyen bir başvurunuz var.");
+        }
+        user.setDeveloperApplicationStatus(com.bulutsoft.bulutstore.entity.DeveloperApplicationStatus.PENDING);
+        user.setDeveloperApplicationDate(java.time.LocalDateTime.now());
+        userRepository.save(user);
+    }
+
+    @Override
+    public List<UserResponse> getPendingDeveloperApplications() {
+        List<User> pending = userRepository.findByDeveloperApplicationStatus(com.bulutsoft.bulutstore.entity.DeveloperApplicationStatus.PENDING);
+        return userMapper.toResponseList(pending);
+    }
+
+    @Override
+    @Transactional
+    public void approveDeveloper(Long userId) {
+        User user = userRepository.findById(userId).orElseThrow(() -> new RuntimeException("Kullanıcı bulunamadı"));
+        user.setDeveloperApplicationStatus(com.bulutsoft.bulutstore.entity.DeveloperApplicationStatus.APPROVED);
+        user.setRole(com.bulutsoft.bulutstore.entity.Role.DEVELOPER);
+        user.setStatus(com.bulutsoft.bulutstore.entity.UserStatus.ACTIVE);
+        userRepository.save(user);
+    }
+
+    @Override
+    @Transactional
+    public void rejectDeveloper(Long userId) {
+        User user = userRepository.findById(userId).orElseThrow(() -> new RuntimeException("Kullanıcı bulunamadı"));
+        user.setDeveloperApplicationStatus(com.bulutsoft.bulutstore.entity.DeveloperApplicationStatus.REJECTED);
+        userRepository.save(user);
+    }
 }

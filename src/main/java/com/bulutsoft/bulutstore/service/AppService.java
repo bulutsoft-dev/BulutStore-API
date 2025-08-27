@@ -14,8 +14,8 @@ import java.util.Optional;
 public interface AppService {
     List<AppResponse> getAllApps();
     Optional<AppResponse> getAppById(Long id);
-    AppResponse createApp(AppRequest request);
-    AppResponse updateApp(Long id, AppRequest request);
+    AppResponse createApp(AppRequest request, String username);
+    AppResponse updateApp(Long id, AppRequest request, String username);
     void deleteApp(Long id);
     List<AppResponse> getAppsByDeveloper(Long developerId);
     List<AppResponse> getAppsByCategory(Long categoryId);
