@@ -4,7 +4,6 @@ import com.bulutsoft.bulutstore.entity.Tag;
 import com.bulutsoft.bulutstore.request.TagRequest;
 import com.bulutsoft.bulutstore.response.TagResponse;
 import org.mapstruct.Mapper;
-import org.mapstruct.factory.Mappers;
 import java.util.List;
 
 /**
@@ -12,7 +11,6 @@ import java.util.List;
  */
 @Mapper(componentModel = "spring")
 public interface TagMapper {
-    TagMapper INSTANCE = Mappers.getMapper(TagMapper.class);
     TagResponse toResponse(Tag tag);
     Tag toEntity(TagRequest tagRequest);
     List<TagResponse> toResponseList(List<Tag> tags);
