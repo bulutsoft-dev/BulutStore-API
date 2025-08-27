@@ -117,4 +117,12 @@ public class UserController {
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.status(HttpStatus.NOT_FOUND).build());
     }
+
+    @Operation(summary = "Kullanıcı kendi developer başvurusunu görüntüler")
+    @GetMapping("/developer-application/me")
+    @PreAuthorize("isAuthenticated()")
+    public ResponseEntity<com.bulutsoft.bulutstore.response.DeveloperApplicationResponse> getOwnDeveloperApplication(org.springframework.security.core.Authentication authentication) {
+        String username = authentication.getName();
+        return ResponseEntity.ok(userService.getOwnDeveloperApplication(username));
+    }
 }

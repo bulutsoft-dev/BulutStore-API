@@ -112,4 +112,14 @@ public class UserServiceImpl implements UserService {
         return userRepository.findByUsername(username)
                 .map(userMapper::toResponse);
     }
+
+    @Override
+    public com.bulutsoft.bulutstore.response.DeveloperApplicationResponse getOwnDeveloperApplication(String username) {
+        User user = userRepository.findByUsername(username)
+                .orElseThrow(() -> new RuntimeException("Kullanıcı bulunamadı"));
+        return new com.bulutsoft.bulutstore.response.DeveloperApplicationResponse(
+                user.getDeveloperApplicationStatus(),
+                user.getDeveloperApplicationDate()
+        );
+    }
 }

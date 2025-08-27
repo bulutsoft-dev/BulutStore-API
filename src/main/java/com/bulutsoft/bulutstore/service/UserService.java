@@ -53,4 +53,9 @@ public interface UserService {
      * Kullanıcıyı username ile bulur.
      */
     Optional<UserResponse> getUserByUsername(String username);
+
+    /**
+     * Giriş yapan kullanıcının developer başvuru durumunu ve tarihini döndürür.
+     */
+    com.bulutsoft.bulutstore.response.DeveloperApplicationResponse getOwnDeveloperApplication(String username);
 }
