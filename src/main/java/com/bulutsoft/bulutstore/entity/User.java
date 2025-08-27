@@ -50,6 +50,14 @@ public class User {
     /** Son güncellenme zamanı */
     private LocalDateTime updatedAt;
 
+    /** Geliştirici görünen adı (isteğe bağlı) */
+    @Column(length = 100)
+    private String displayName;
+
+    /** Geliştirici web sitesi (isteğe bağlı) */
+    @Column(length = 255)
+    private String website;
+
     /**
      * Kayıt eklenmeden önce zaman damgalarını ayarlar.
      */

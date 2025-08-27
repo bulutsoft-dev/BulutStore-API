@@ -16,6 +16,8 @@ public class AppRequest {
     private Long developerId;
     private AppStatus status;
     private List<Long> tagIds;
+    private String iconUrl;
+    private List<String> screenshotUrls;
 
     public String getName() { return name; }
     public void setName(String name) { this.name = name; }
@@ -29,5 +31,8 @@ public class AppRequest {
     public void setStatus(AppStatus status) { this.status = status; }
     public List<Long> getTagIds() { return tagIds; }
     public void setTagIds(List<Long> tagIds) { this.tagIds = tagIds; }
+    public String getIconUrl() { return iconUrl; }
+    public void setIconUrl(String iconUrl) { this.iconUrl = iconUrl; }
+    public List<String> getScreenshotUrls() { return screenshotUrls; }
+    public void setScreenshotUrls(List<String> screenshotUrls) { this.screenshotUrls = screenshotUrls; }
 }
-

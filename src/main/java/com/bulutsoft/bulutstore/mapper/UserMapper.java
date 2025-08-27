@@ -12,6 +12,9 @@ import java.util.List;
  */
 @Mapper(componentModel = "spring")
 public interface UserMapper {
+    // displayName ve website alanlarını User <-> UserResponse arasında map et
+    @org.mapstruct.Mapping(source = "displayName", target = "displayName")
+    @org.mapstruct.Mapping(source = "website", target = "website")
     UserResponse toResponse(User user);
     List<UserResponse> toResponseList(List<User> users);
     User toEntity(UserCreateRequest request);

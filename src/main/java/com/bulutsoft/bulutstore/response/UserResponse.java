@@ -12,10 +12,12 @@ public class UserResponse {
     private UserStatus status;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
+    private String displayName;
+    private String website;
 
     public UserResponse() {}
 
-    public UserResponse(Long id, String username, String email, Role role, UserStatus status, LocalDateTime createdAt, LocalDateTime updatedAt) {
+    public UserResponse(Long id, String username, String email, Role role, UserStatus status, LocalDateTime createdAt, LocalDateTime updatedAt, String displayName, String website) {
         this.id = id;
         this.username = username;
         this.email = email;
@@ -23,6 +25,8 @@ public class UserResponse {
         this.status = status;
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
+        this.displayName = displayName;
+        this.website = website;
     }
 
     public Long getId() { return id; }
@@ -39,5 +43,8 @@ public class UserResponse {
     public void setCreatedAt(LocalDateTime createdAt) { this.createdAt = createdAt; }
     public LocalDateTime getUpdatedAt() { return updatedAt; }
     public void setUpdatedAt(LocalDateTime updatedAt) { this.updatedAt = updatedAt; }
+    public String getDisplayName() { return displayName; }
+    public void setDisplayName(String displayName) { this.displayName = displayName; }
+    public String getWebsite() { return website; }
+    public void setWebsite(String website) { this.website = website; }
 }
-

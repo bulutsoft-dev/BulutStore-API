@@ -16,10 +16,14 @@ public class AppResponse {
     private List<Long> tagIds;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
+    private String iconUrl;
+    private List<String> screenshotUrls;
+    private String developerDisplayName;
+    private String developerWebsite;
 
     public AppResponse() {}
 
-    public AppResponse(Long id, String name, String description, Long categoryId, Long developerId, AppStatus status, Long downloadsCount, Double avgRating, List<Long> tagIds, LocalDateTime createdAt, LocalDateTime updatedAt) {
+    public AppResponse(Long id, String name, String description, Long categoryId, Long developerId, AppStatus status, Long downloadsCount, Double avgRating, List<Long> tagIds, LocalDateTime createdAt, LocalDateTime updatedAt, String iconUrl, List<String> screenshotUrls, String developerDisplayName, String developerWebsite) {
         this.id = id;
         this.name = name;
         this.description = description;
@@ -31,6 +35,10 @@ public class AppResponse {
         this.tagIds = tagIds;
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
+        this.iconUrl = iconUrl;
+        this.screenshotUrls = screenshotUrls;
+        this.developerDisplayName = developerDisplayName;
+        this.developerWebsite = developerWebsite;
     }
 
     public Long getId() { return id; }
@@ -55,5 +63,12 @@ public class AppResponse {
     public void setCreatedAt(LocalDateTime createdAt) { this.createdAt = createdAt; }
     public LocalDateTime getUpdatedAt() { return updatedAt; }
     public void setUpdatedAt(LocalDateTime updatedAt) { this.updatedAt = updatedAt; }
+    public String getIconUrl() { return iconUrl; }
+    public void setIconUrl(String iconUrl) { this.iconUrl = iconUrl; }
+    public List<String> getScreenshotUrls() { return screenshotUrls; }
+    public void setScreenshotUrls(List<String> screenshotUrls) { this.screenshotUrls = screenshotUrls; }
+    public String getDeveloperDisplayName() { return developerDisplayName; }
+    public void setDeveloperDisplayName(String developerDisplayName) { this.developerDisplayName = developerDisplayName; }
+    public String getDeveloperWebsite() { return developerWebsite; }
+    public void setDeveloperWebsite(String developerWebsite) { this.developerWebsite = developerWebsite; }
 }
-

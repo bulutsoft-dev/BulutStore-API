@@ -66,6 +66,15 @@ public class App {
     /** Son güncellenme zamanı */
     private LocalDateTime updatedAt;
 
+    /** Uygulama ikonunun URL'si */
+    private String iconUrl;
+
+    /** Uygulamanın ekran görüntüleri (virgülle ayrılmış URL listesi) */
+    @ElementCollection
+    @CollectionTable(name = "app_screenshots", joinColumns = @JoinColumn(name = "app_id"))
+    @Column(name = "screenshot_url")
+    private List<String> screenshotUrls;
+
     /**
      * Kayıt eklenmeden önce zaman damgalarını ayarlar.
      */
