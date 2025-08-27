@@ -103,4 +103,10 @@ public class UserServiceImpl implements UserService {
         user.setDeveloperApplicationStatus(com.bulutsoft.bulutstore.entity.DeveloperApplicationStatus.REJECTED);
         userRepository.save(user);
     }
+
+    @Override
+    public Optional<UserResponse> getUserByUsername(String username) {
+        return userRepository.findByUsername(username)
+                .map(userMapper::toResponse);
+    }
 }

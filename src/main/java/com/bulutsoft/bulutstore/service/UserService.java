@@ -48,4 +48,9 @@ public interface UserService {
 
     /** Admin: Developer başvurusunu reddeder */
     void rejectDeveloper(Long userId);
+
+    /**
+     * Kullanıcıyı username ile bulur.
+     */
+    Optional<UserResponse> getUserByUsername(String username);
 }

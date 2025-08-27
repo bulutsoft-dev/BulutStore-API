@@ -106,4 +106,15 @@ public class UserController {
         userService.rejectDeveloper(userId);
         return ResponseEntity.ok("Developer başvurusu reddedildi.");
     }
+
+    @Operation(summary = "Get current user info")
+    @ApiResponse(responseCode = "200", description = "Current user info")
+    @GetMapping("/me")
+    @PreAuthorize("isAuthenticated()")
+    public ResponseEntity<UserResponse> getCurrentUserInfo(org.springframework.security.core.Authentication authentication) {
+        String username = authentication.getName();
+        return userService.getUserByUsername(username)
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.status(HttpStatus.NOT_FOUND).build());
+    }
 }
