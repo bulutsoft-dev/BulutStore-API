@@ -4,7 +4,10 @@ import com.bulutsoft.bulutstore.entity.User;
 import com.bulutsoft.bulutstore.request.UserCreateRequest;
 import com.bulutsoft.bulutstore.request.UserUpdateRequest;
 import com.bulutsoft.bulutstore.response.UserResponse;
+import org.mapstruct.AfterMapping;
 import org.mapstruct.Mapper;
+import org.mapstruct.MappingTarget;
+
 import java.util.List;
 
 /**
@@ -19,4 +22,12 @@ public interface UserMapper {
     List<UserResponse> toResponseList(List<User> users);
     User toEntity(UserCreateRequest request);
     void updateEntityFromRequest(UserUpdateRequest request, @org.mapstruct.MappingTarget User user);
+
+    @AfterMapping
+    default void handlePasswordUpdate(UserUpdateRequest request, @MappingTarget User user) {
+        if (request.getPassword() != null && !request.getPassword().isEmpty()) {
+            user.setPassword(request.getPassword());
+        }
+        // If password is null or empty, do not change the existing password
+    }
 }

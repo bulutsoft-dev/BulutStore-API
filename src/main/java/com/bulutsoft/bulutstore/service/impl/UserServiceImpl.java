@@ -72,6 +72,9 @@ public class UserServiceImpl implements UserService {
         // Giriş yapan kullanıcıyı al
         String username = org.springframework.security.core.context.SecurityContextHolder.getContext().getAuthentication().getName();
         User user = userRepository.findByUsername(username).orElseThrow(() -> new RuntimeException("Kullanıcı bulunamadı"));
+        if (user.getDeveloperApplicationDate() != null) {
+            throw new RuntimeException("Bir kullanıcı yalnızca bir kez geliştirici başvurusu yapabilir.");
+        }
         if (user.getDeveloperApplicationStatus() == com.bulutsoft.bulutstore.entity.DeveloperApplicationStatus.PENDING) {
             throw new RuntimeException("Zaten bekleyen bir başvurunuz var.");
         }
