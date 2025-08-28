@@ -56,12 +56,13 @@ public class AppServiceImpl implements AppService {
         // Giriş yapan kullanıcıyı bul
         User developer = userRepository.findByUsername(username)
             .orElseThrow(() -> new IllegalArgumentException("Developer not found"));
-        if (developer.getRole() != com.bulutsoft.bulutstore.entity.Role.DEVELOPER ||
-            developer.getStatus() != com.bulutsoft.bulutstore.entity.UserStatus.ACTIVE) {
-            throw new IllegalArgumentException("User is not an active developer");
+        if (developer.getRole() != com.bulutsoft.bulutstore.entity.Role.DEVELOPER &&
+            developer.getRole() != com.bulutsoft.bulutstore.entity.Role.ADMIN) {
+            throw new IllegalArgumentException("User is not a developer or admin");
         }
         App app = appMapper.toEntity(request);
         app.setDeveloper(developer);
+        app.setStatus(com.bulutsoft.bulutstore.entity.AppStatus.PENDING); // Otomatik PENDING
         categoryRepository.findById(request.getCategoryId()).ifPresent(app::setCategory);
         if (request.getTagIds() != null) {
             app.setTags(request.getTagIds().stream()
@@ -117,5 +118,28 @@ public class AppServiceImpl implements AppService {
     @Override
     public List<AppResponse> searchAppsByName(String name) {
         return appMapper.toResponseList(appRepository.findByNameContainingIgnoreCase(name));
+    }
+
+    @Override
+    @Transactional
+    public void approveApp(Long appId) {
+        App app = appRepository.findById(appId)
+            .orElseThrow(() -> new IllegalArgumentException("App not found"));
+        app.setStatus(com.bulutsoft.bulutstore.entity.AppStatus.APPROVED);
+        appRepository.save(app);
+    }
+
+    @Override
+    @Transactional
+    public void rejectApp(Long appId) {
+        App app = appRepository.findById(appId)
+            .orElseThrow(() -> new IllegalArgumentException("App not found"));
+        app.setStatus(com.bulutsoft.bulutstore.entity.AppStatus.REJECTED);
+        appRepository.save(app);
+    }
+
+    @Override
+    public List<AppResponse> getApprovedApps() {
+        return appMapper.toResponseList(appRepository.findByStatus(com.bulutsoft.bulutstore.entity.AppStatus.APPROVED));
     }
 }

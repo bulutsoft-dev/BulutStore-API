@@ -43,7 +43,7 @@ public class CategoryController {
     @Operation(summary = "Create new category")
     @ApiResponse(responseCode = "201", description = "Category created")
     @PostMapping
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('ADMIN') or hasRole('DEVELOPER')")
     public ResponseEntity<CategoryResponse> createCategory(@Valid @RequestBody CategoryRequest categoryRequest) {
         CategoryResponse created = categoryService.createCategory(categoryRequest);
         return ResponseEntity.status(HttpStatus.CREATED).body(created);
@@ -55,7 +55,7 @@ public class CategoryController {
         @ApiResponse(responseCode = "404", description = "Category not found")
     })
     @PutMapping("/{id}")
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('ADMIN') or hasRole('DEVELOPER')")
     public ResponseEntity<CategoryResponse> updateCategory(@PathVariable Long id, @Valid @RequestBody CategoryRequest categoryRequest) {
         CategoryResponse updated = categoryService.updateCategory(id, categoryRequest);
         return ResponseEntity.ok(updated);
@@ -67,7 +67,7 @@ public class CategoryController {
         @ApiResponse(responseCode = "404", description = "Category not found")
     })
     @DeleteMapping("/{id}")
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('ADMIN') or hasRole('DEVELOPER')")
     public ResponseEntity<Void> deleteCategory(@PathVariable Long id) {
         categoryService.deleteCategory(id);
         return ResponseEntity.noContent().build();

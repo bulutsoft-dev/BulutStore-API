@@ -20,4 +20,7 @@ public interface AppService {
     List<AppResponse> getAppsByDeveloper(Long developerId);
     List<AppResponse> getAppsByCategory(Long categoryId);
     List<AppResponse> searchAppsByName(String name);
+    void approveApp(Long appId);
+    void rejectApp(Long appId);
+    List<AppResponse> getApprovedApps();
 }

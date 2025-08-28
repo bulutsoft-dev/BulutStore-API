@@ -43,7 +43,7 @@ public class TagController {
     @Operation(summary = "Create new tag")
     @ApiResponse(responseCode = "201", description = "Tag created")
     @PostMapping
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('ADMIN') or hasRole('DEVELOPER')")
     public ResponseEntity<TagResponse> createTag(@Valid @RequestBody TagRequest tagRequest) {
         TagResponse created = tagService.createTag(tagRequest);
         return ResponseEntity.status(HttpStatus.CREATED).body(created);
@@ -55,7 +55,7 @@ public class TagController {
         @ApiResponse(responseCode = "404", description = "Tag not found")
     })
     @PutMapping("/{id}")
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('ADMIN') or hasRole('DEVELOPER')")
     public ResponseEntity<TagResponse> updateTag(@PathVariable Long id, @Valid @RequestBody TagRequest tagRequest) {
         TagResponse updated = tagService.updateTag(id, tagRequest);
         return ResponseEntity.ok(updated);
@@ -67,7 +67,7 @@ public class TagController {
         @ApiResponse(responseCode = "404", description = "Tag not found")
     })
     @DeleteMapping("/{id}")
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('ADMIN') or hasRole('DEVELOPER')")
     public ResponseEntity<Void> deleteTag(@PathVariable Long id) {
         tagService.deleteTag(id);
         return ResponseEntity.noContent().build();

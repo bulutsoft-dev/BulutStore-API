@@ -96,4 +96,29 @@ public class AppController {
     public ResponseEntity<List<AppResponse>> searchAppsByName(@RequestParam String name) {
         return ResponseEntity.ok(appService.searchAppsByName(name));
     }
+
+    @Operation(summary = "Approve app (admin only)")
+    @ApiResponse(responseCode = "200", description = "App approved")
+    @PostMapping("/{id}/approve")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<Void> approveApp(@PathVariable Long id) {
+        appService.approveApp(id);
+        return ResponseEntity.ok().build();
+    }
+
+    @Operation(summary = "Reject app (admin only)")
+    @ApiResponse(responseCode = "200", description = "App rejected")
+    @PostMapping("/{id}/reject")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<Void> rejectApp(@PathVariable Long id) {
+        appService.rejectApp(id);
+        return ResponseEntity.ok().build();
+    }
+
+    @Operation(summary = "Get all approved apps (store)")
+    @ApiResponse(responseCode = "200", description = "List of approved apps")
+    @GetMapping("/approved")
+    public ResponseEntity<List<AppResponse>> getApprovedApps() {
+        return ResponseEntity.ok(appService.getApprovedApps());
+    }
 }
