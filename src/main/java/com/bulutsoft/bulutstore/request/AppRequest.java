@@ -3,6 +3,7 @@ package com.bulutsoft.bulutstore.request;
 import com.bulutsoft.bulutstore.entity.AppStatus;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 import java.util.List;
 
 public class AppRequest {
@@ -17,6 +18,7 @@ public class AppRequest {
     private List<Long> tagIds;
     private String iconUrl;
     private List<String> screenshotUrls;
+    @Size(max = 255, message = "Kısa açıklama en fazla 255 karakter olabilir.")
     private String shortDescription;
     private String fileUrl;
     private String version;
