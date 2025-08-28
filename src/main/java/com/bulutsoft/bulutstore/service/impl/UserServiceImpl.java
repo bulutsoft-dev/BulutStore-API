@@ -8,6 +8,7 @@ import com.bulutsoft.bulutstore.mapper.UserMapper;
 import com.bulutsoft.bulutstore.repos.UserRepository;
 import com.bulutsoft.bulutstore.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -22,11 +23,13 @@ import java.util.Optional;
 public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final UserMapper userMapper;
+    private final BCryptPasswordEncoder passwordEncoder;
 
     @Autowired
-    public UserServiceImpl(UserRepository userRepository, UserMapper userMapper) {
+    public UserServiceImpl(UserRepository userRepository, UserMapper userMapper, BCryptPasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
         this.userMapper = userMapper;
+        this.passwordEncoder = passwordEncoder;
     }
 
     @Override
@@ -43,8 +46,8 @@ public class UserServiceImpl implements UserService {
     @Transactional
     public UserResponse createUser(UserCreateRequest request) {
         User user = userMapper.toEntity(request);
-        // Şifre hashleme işlemi burada yapılmalı (ör: passwordEncoder.encode(request.getPassword()))
-        // user.setPassword(...);
+        // Şifre hashleme işlemi
+        user.setPassword(passwordEncoder.encode(request.getPassword()));
         if (user.getStatus() == null) {
             user.setStatus(com.bulutsoft.bulutstore.entity.UserStatus.ACTIVE);
         }
@@ -56,7 +59,10 @@ public class UserServiceImpl implements UserService {
     public UserResponse updateUser(Long id, UserUpdateRequest request) {
         User user = userRepository.findById(id).orElseThrow(() -> new RuntimeException("User not found"));
         userMapper.updateEntityFromRequest(request, user);
-        // Şifre güncellemesi gerekiyorsa burada yapılmalı
+        // Şifre güncellemesi gerekiyorsa burada hashle
+        if (request.getPassword() != null && !request.getPassword().isEmpty()) {
+            user.setPassword(passwordEncoder.encode(request.getPassword()));
+        }
         return userMapper.toResponse(userRepository.save(user));
     }
 
