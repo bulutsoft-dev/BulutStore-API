@@ -42,7 +42,7 @@ public class AppServiceImpl implements AppService {
 
     @Override
     public List<AppResponse> getAllApps() {
-        return appMapper.toResponseList(appRepository.findAll());
+        return appMapper.toResponseList(appRepository.findAllWithDeveloperAndCategory());
     }
 
     @Override

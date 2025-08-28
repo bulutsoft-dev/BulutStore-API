@@ -5,6 +5,7 @@ import com.bulutsoft.bulutstore.entity.User;
 import com.bulutsoft.bulutstore.entity.Category;
 import com.bulutsoft.bulutstore.entity.AppStatus;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 import java.util.List;
 
@@ -33,4 +34,10 @@ public interface AppRepository extends JpaRepository<App, Long> {
      * Sadece onaylanmış uygulamaları döndürür.
      */
     List<App> findByStatus(AppStatus status);
+
+    /**
+     * Tüm uygulamaları developer ve category ile birlikte döndürür (fetch join).
+     */
+    @Query("SELECT a FROM App a LEFT JOIN FETCH a.developer LEFT JOIN FETCH a.category")
+    List<App> findAllWithDeveloperAndCategory();
 }

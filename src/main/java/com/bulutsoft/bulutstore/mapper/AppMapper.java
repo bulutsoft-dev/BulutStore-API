@@ -6,10 +6,8 @@ import com.bulutsoft.bulutstore.response.AppResponse;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Mappings;
-import org.mapstruct.Named;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * App <-> AppDto dönüşümlerini sağlayan MapStruct mapper arayüzü.
@@ -20,12 +18,11 @@ public interface AppMapper {
     @Mappings({
         @Mapping(source = "iconUrl", target = "iconUrl"),
         @Mapping(source = "screenshotUrls", target = "screenshotUrls"),
-        @Mapping(source = "developer.displayName", target = "developerDisplayName"),
-        @Mapping(source = "developer.website", target = "developerWebsite"),
         @Mapping(source = "shortDescription", target = "shortDescription"),
-        @Mapping(source = "category.id", target = "categoryId"),
-        @Mapping(source = "developer.id", target = "developerId"),
-        @Mapping(source = "tags", target = "tagIds", qualifiedByName = "tagsToIds")
+        @Mapping(source = "category", target = "category"),
+        @Mapping(source = "developer", target = "developer"),
+        @Mapping(source = "tags", target = "tags"),
+        @Mapping(source = "fileUrl", target = "fileUrl")
     })
     AppResponse toResponse(App app);
 
@@ -34,11 +31,6 @@ public interface AppMapper {
     @Mapping(source = "iconUrl", target = "iconUrl")
     @Mapping(source = "screenshotUrls", target = "screenshotUrls")
     @Mapping(source = "shortDescription", target = "shortDescription")
+    @Mapping(source = "fileUrl", target = "fileUrl")
     App toEntity(AppRequest request);
-
-    @Named("tagsToIds")
-    default java.util.List<Long> tagsToIds(java.util.List<com.bulutsoft.bulutstore.entity.Tag> tags) {
-        if (tags == null) return null;
-        return tags.stream().map(com.bulutsoft.bulutstore.entity.Tag::getId).collect(Collectors.toList());
-    }
 }

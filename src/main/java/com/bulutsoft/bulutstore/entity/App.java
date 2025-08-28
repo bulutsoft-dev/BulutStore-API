@@ -79,6 +79,10 @@ public class App {
     @Column(name = "screenshot_url")
     private List<String> screenshotUrls;
 
+    /** Uygulama dosyası URL'si */
+    @Column(name = "file_url", length = 255)
+    private String fileUrl;
+
     /**
      * Kayıt eklenmeden önce zaman damgalarını ayarlar.
      */
