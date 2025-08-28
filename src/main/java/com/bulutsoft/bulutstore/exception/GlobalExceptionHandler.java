@@ -1,5 +1,6 @@
 package com.bulutsoft.bulutstore.exception;
 
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -34,5 +35,12 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         Map<String, String> error = new HashMap<>();
         error.put("error", ex.getMessage());
         return new ResponseEntity<>(error, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+    @ExceptionHandler(DataIntegrityViolationException.class)
+    public ResponseEntity<Object> handleDataIntegrityViolationException(DataIntegrityViolationException ex, WebRequest request) {
+        Map<String, String> error = new HashMap<>();
+        error.put("error", "You have already submitted a review for this app.");
+        return new ResponseEntity<>(error, HttpStatus.CONFLICT);
     }
 }

@@ -61,9 +61,16 @@ public class ReviewServiceImpl implements ReviewService {
     @Override
     @Transactional
     public ReviewResponse updateReview(Long id, ReviewRequest request) {
-        Review review = reviewMapper.toEntity(request);
-        review.setId(id);
-        return reviewMapper.toResponse(reviewRepository.save(review));
+        Review existing = reviewRepository.findById(id)
+            .orElseThrow(() -> new RuntimeException("Review not found"));
+        // appId ve userId değişikliğine izin verme
+        if (!existing.getApp().getId().equals(request.getAppId()) ||
+            !existing.getUser().getId().equals(request.getUserId())) {
+            throw new RuntimeException("Cannot change appId or userId of a review");
+        }
+        existing.setRating(request.getRating());
+        existing.setComment(request.getComment());
+        return reviewMapper.toResponse(reviewRepository.save(existing));
     }
 
     @Override
