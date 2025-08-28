@@ -84,7 +84,7 @@ public class App {
     private String fileUrl;
 
     /** Uygulamanın sürümleri */
-    @OneToMany(mappedBy = "app", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "app", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     private List<AppVersion> versions;
 
     /**

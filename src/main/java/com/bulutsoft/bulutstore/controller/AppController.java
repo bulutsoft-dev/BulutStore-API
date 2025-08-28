@@ -70,9 +70,10 @@ public class AppController {
             @ApiResponse(responseCode = "404", description = "App not found")
     })
     @DeleteMapping("/{id}")
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('DEVELOPER') or hasRole('ADMIN')")
     public ResponseEntity<Void> deleteApp(@PathVariable Long id) {
-        appService.deleteApp(id);
+        String username = org.springframework.security.core.context.SecurityContextHolder.getContext().getAuthentication().getName();
+        appService.deleteApp(id, username);
         return ResponseEntity.noContent().build();
     }
 

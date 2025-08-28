@@ -149,8 +149,24 @@ public class AppServiceImpl implements AppService {
 
     @Override
     @Transactional
-    public void deleteApp(Long id) {
-        appRepository.deleteById(id);
+    public void deleteApp(Long id, String username) {
+        User user = userRepository.findByUsername(username)
+            .orElseThrow(() -> new IllegalArgumentException("User not found"));
+        App app = appRepository.findById(id)
+            .orElseThrow(() -> new IllegalArgumentException("App not found"));
+        // Admin ise her app'i silebilir
+        if (user.getRole() == com.bulutsoft.bulutstore.entity.Role.ADMIN) {
+            appRepository.delete(app);
+            return;
+        }
+        // Developer ise sadece kendi app'ini silebilir
+        if (user.getRole() == com.bulutsoft.bulutstore.entity.Role.DEVELOPER &&
+            app.getDeveloper().getId().equals(user.getId())) {
+            appRepository.delete(app);
+            return;
+        }
+        // Aksi halde yetkisiz
+        throw new SecurityException("You are not authorized to delete this app");
     }
 
     @Override
