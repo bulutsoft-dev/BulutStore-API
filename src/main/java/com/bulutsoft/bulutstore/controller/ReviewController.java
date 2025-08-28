@@ -43,7 +43,7 @@ public class ReviewController {
     @Operation(summary = "Create new review")
     @ApiResponse(responseCode = "201", description = "Review created")
     @PostMapping
-    @PreAuthorize("hasRole('USER')")
+    @PreAuthorize("isAuthenticated()")
     public ResponseEntity<ReviewResponse> createReview(@Valid @RequestBody ReviewRequest reviewRequest) {
         ReviewResponse created = reviewService.createReview(reviewRequest);
         return ResponseEntity.status(HttpStatus.CREATED).body(created);
@@ -55,7 +55,7 @@ public class ReviewController {
         @ApiResponse(responseCode = "404", description = "Review not found")
     })
     @PutMapping("/{id}")
-    @PreAuthorize("hasRole('USER')")
+    @PreAuthorize("isAuthenticated()")
     public ResponseEntity<ReviewResponse> updateReview(@PathVariable Long id, @Valid @RequestBody ReviewRequest reviewRequest) {
         ReviewResponse updated = reviewService.updateReview(id, reviewRequest);
         return ResponseEntity.ok(updated);
