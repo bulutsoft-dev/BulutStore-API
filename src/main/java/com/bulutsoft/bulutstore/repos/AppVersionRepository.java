@@ -10,5 +10,6 @@ import org.springframework.stereotype.Repository;
  */
 @Repository
 public interface AppVersionRepository extends JpaRepository<AppVersion, Long> {
+    // Belirli bir App'a ait en son versiyonu bul
+    java.util.Optional<AppVersion> findTopByAppIdOrderByReleaseDateDesc(Long appId);
 }
-

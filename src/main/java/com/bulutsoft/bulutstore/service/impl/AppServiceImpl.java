@@ -101,17 +101,49 @@ public class AppServiceImpl implements AppService {
             developer.getStatus() != com.bulutsoft.bulutstore.entity.UserStatus.ACTIVE) {
             throw new IllegalArgumentException("User is not an active developer");
         }
-        App app = appMapper.toEntity(request);
-        app.setId(id);
-        app.setDeveloper(developer);
-        categoryRepository.findById(request.getCategoryId()).ifPresent(app::setCategory);
-        if (request.getTagIds() != null) {
-            app.setTags(request.getTagIds().stream()
-                .map(tagRepository::findById)
-                .filter(Optional::isPresent)
-                .map(Optional::get)
-                .collect(java.util.stream.Collectors.toList()));
+        // Var olan App'i bul
+        App app = appRepository.findById(id)
+            .orElseThrow(() -> new IllegalArgumentException("App not found"));
+        // Sadece null olmayan alanları güncelle
+        if (request.getName() != null) app.setName(request.getName());
+        if (request.getDescription() != null) app.setDescription(request.getDescription());
+        if (request.getShortDescription() != null) app.setShortDescription(request.getShortDescription());
+        if (request.getIconUrl() != null) app.setIconUrl(request.getIconUrl());
+        if (request.getScreenshotUrls() != null) app.setScreenshotUrls(request.getScreenshotUrls());
+        if (request.getFileUrl() != null) app.setFileUrl(request.getFileUrl());
+        // Kategori güncelle
+        if (request.getCategoryId() != null) {
+            Category category = categoryRepository.findById(request.getCategoryId())
+                .orElseThrow(() -> new IllegalArgumentException("Category not found"));
+            app.setCategory(category);
         }
+        // Tag güncelle
+        if (request.getTagIds() != null) {
+            List<Tag> tags = request.getTagIds().stream()
+                .map(tagId -> tagRepository.findById(tagId)
+                    .orElseThrow(() -> new IllegalArgumentException("Tag not found: " + tagId)))
+                .collect(Collectors.toList());
+            app.setTags(tags);
+        }
+        // Status güncelle (isteğe bağlı, null ise dokunma)
+        if (request.getStatus() != null) {
+            app.setStatus(request.getStatus());
+        }
+        // Sürüm güncellemesi: Eğer yeni bir version geldiyse ve farklıysa yeni AppVersion oluştur
+        if (request.getVersion() != null && !request.getVersion().isBlank()) {
+            String newVersion = request.getVersion();
+            Optional<AppVersion> lastVersionOpt = appVersionRepository.findTopByAppIdOrderByReleaseDateDesc(app.getId());
+            boolean isSame = lastVersionOpt.isPresent() && lastVersionOpt.get().getVersion().equals(newVersion);
+            if (!isSame) {
+                AppVersion version = new AppVersion();
+                version.setApp(app);
+                version.setVersion(newVersion);
+                version.setApkPath(app.getFileUrl());
+                appVersionRepository.save(version);
+            }
+        }
+        // Version güncellemesi (AppVersion tablosu ile ilişkili ise, burada ayrıca ele alınmalı)
+        // Şimdilik sadece App entity'sini güncelliyoruz.
         return appMapper.toResponse(appRepository.save(app));
     }
 
