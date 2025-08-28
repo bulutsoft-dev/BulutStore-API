@@ -16,6 +16,7 @@ public interface UserMapper {
     // displayName ve website alanlarını User <-> UserResponse arasında map et
     @org.mapstruct.Mapping(source = "displayName", target = "displayName")
     @org.mapstruct.Mapping(source = "website", target = "website")
+    @org.mapstruct.Mapping(source = "developerApplicationText", target = "developerApplicationText")
     UserResponse toResponse(User user);
     List<UserResponse> toResponseList(List<User> users);
     User toEntity(UserCreateRequest request);

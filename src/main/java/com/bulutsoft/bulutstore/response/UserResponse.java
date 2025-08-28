@@ -14,10 +14,11 @@ public class UserResponse {
     private LocalDateTime updatedAt;
     private String displayName;
     private String website;
+    private String developerApplicationText;
 
     public UserResponse() {}
 
-    public UserResponse(Long id, String username, String email, Role role, UserStatus status, LocalDateTime createdAt, LocalDateTime updatedAt, String displayName, String website) {
+    public UserResponse(Long id, String username, String email, Role role, UserStatus status, LocalDateTime createdAt, LocalDateTime updatedAt, String displayName, String website, String developerApplicationText) {
         this.id = id;
         this.username = username;
         this.email = email;
@@ -27,6 +28,7 @@ public class UserResponse {
         this.updatedAt = updatedAt;
         this.displayName = displayName;
         this.website = website;
+        this.developerApplicationText = developerApplicationText;
     }
 
     public Long getId() { return id; }
@@ -47,4 +49,6 @@ public class UserResponse {
     public void setDisplayName(String displayName) { this.displayName = displayName; }
     public String getWebsite() { return website; }
     public void setWebsite(String website) { this.website = website; }
+    public String getDeveloperApplicationText() { return developerApplicationText; }
+    public void setDeveloperApplicationText(String developerApplicationText) { this.developerApplicationText = developerApplicationText; }
 }
