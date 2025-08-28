@@ -1,11 +1,13 @@
 package com.bulutsoft.bulutstore.mapper;
 
 import com.bulutsoft.bulutstore.entity.App;
+import com.bulutsoft.bulutstore.entity.AppVersion;
 import com.bulutsoft.bulutstore.request.AppRequest;
 import com.bulutsoft.bulutstore.response.AppResponse;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Mappings;
+import org.mapstruct.Named;
 
 import java.util.List;
 
@@ -22,7 +24,8 @@ public interface AppMapper {
         @Mapping(source = "category", target = "category"),
         @Mapping(source = "developer", target = "developer"),
         @Mapping(source = "tags", target = "tags"),
-        @Mapping(source = "fileUrl", target = "fileUrl")
+        @Mapping(source = "fileUrl", target = "fileUrl"),
+        @Mapping(target = "versionName", source = "app", qualifiedByName = "getLatestVersionName")
     })
     AppResponse toResponse(App app);
 
@@ -33,4 +36,21 @@ public interface AppMapper {
     @Mapping(source = "shortDescription", target = "shortDescription")
     @Mapping(source = "fileUrl", target = "fileUrl")
     App toEntity(AppRequest request);
+
+    @Named("getLatestVersionName")
+    default String getLatestVersionName(App app) {
+        if (app == null) return null;
+        try {
+            java.lang.reflect.Field versionsField = app.getClass().getDeclaredField("versions");
+            versionsField.setAccessible(true);
+            java.util.List<AppVersion> versions = (java.util.List<AppVersion>) versionsField.get(app);
+            if (versions == null || versions.isEmpty()) return null;
+            return versions.stream()
+                .max(java.util.Comparator.comparing(AppVersion::getReleaseDate))
+                .map(AppVersion::getVersion)
+                .orElse(null);
+        } catch (Exception e) {
+            return null;
+        }
+    }
 }

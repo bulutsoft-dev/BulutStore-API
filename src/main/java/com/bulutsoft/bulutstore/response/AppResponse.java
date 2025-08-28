@@ -20,10 +20,11 @@ public class AppResponse {
     private String iconUrl;
     private List<String> screenshotUrls;
     private String fileUrl;
+    private String versionName;
 
     public AppResponse() {}
 
-    public AppResponse(Long id, String name, String description, String shortDescription, CategoryResponse category, DeveloperResponse developer, AppStatus status, Long downloadsCount, Double avgRating, List<TagResponse> tags, LocalDateTime createdAt, LocalDateTime updatedAt, String iconUrl, List<String> screenshotUrls, String fileUrl) {
+    public AppResponse(Long id, String name, String description, String shortDescription, CategoryResponse category, DeveloperResponse developer, AppStatus status, Long downloadsCount, Double avgRating, List<TagResponse> tags, LocalDateTime createdAt, LocalDateTime updatedAt, String iconUrl, List<String> screenshotUrls, String fileUrl, String versionName) {
         this.id = id;
         this.name = name;
         this.description = description;
@@ -39,6 +40,7 @@ public class AppResponse {
         this.iconUrl = iconUrl;
         this.screenshotUrls = screenshotUrls;
         this.fileUrl = fileUrl;
+        this.versionName = versionName;
     }
 
     public Long getId() { return id; }
@@ -71,4 +73,6 @@ public class AppResponse {
     public void setScreenshotUrls(List<String> screenshotUrls) { this.screenshotUrls = screenshotUrls; }
     public String getFileUrl() { return fileUrl; }
     public void setFileUrl(String fileUrl) { this.fileUrl = fileUrl; }
+    public String getVersionName() { return versionName; }
+    public void setVersionName(String versionName) { this.versionName = versionName; }
 }

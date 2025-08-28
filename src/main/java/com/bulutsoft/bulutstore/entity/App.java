@@ -83,6 +83,10 @@ public class App {
     @Column(name = "file_url", length = 255)
     private String fileUrl;
 
+    /** Uygulamanın sürümleri */
+    @OneToMany(mappedBy = "app", fetch = FetchType.LAZY)
+    private List<AppVersion> versions;
+
     /**
      * Kayıt eklenmeden önce zaman damgalarını ayarlar.
      */

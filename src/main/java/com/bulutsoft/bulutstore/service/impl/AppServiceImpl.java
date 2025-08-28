@@ -4,11 +4,13 @@ import com.bulutsoft.bulutstore.entity.App;
 import com.bulutsoft.bulutstore.entity.User;
 import com.bulutsoft.bulutstore.entity.Category;
 import com.bulutsoft.bulutstore.entity.Tag;
+import com.bulutsoft.bulutstore.entity.AppVersion;
 import com.bulutsoft.bulutstore.mapper.AppMapper;
 import com.bulutsoft.bulutstore.repos.AppRepository;
 import com.bulutsoft.bulutstore.repos.UserRepository;
 import com.bulutsoft.bulutstore.repos.CategoryRepository;
 import com.bulutsoft.bulutstore.repos.TagRepository;
+import com.bulutsoft.bulutstore.repos.AppVersionRepository;
 import com.bulutsoft.bulutstore.service.AppService;
 import com.bulutsoft.bulutstore.request.AppRequest;
 import com.bulutsoft.bulutstore.response.AppResponse;
@@ -30,14 +32,16 @@ public class AppServiceImpl implements AppService {
     private final CategoryRepository categoryRepository;
     private final TagRepository tagRepository;
     private final AppMapper appMapper;
+    private final AppVersionRepository appVersionRepository;
 
     @Autowired
-    public AppServiceImpl(AppRepository appRepository, UserRepository userRepository, CategoryRepository categoryRepository, TagRepository tagRepository, AppMapper appMapper) {
+    public AppServiceImpl(AppRepository appRepository, UserRepository userRepository, CategoryRepository categoryRepository, TagRepository tagRepository, AppMapper appMapper, AppVersionRepository appVersionRepository) {
         this.appRepository = appRepository;
         this.userRepository = userRepository;
         this.categoryRepository = categoryRepository;
         this.tagRepository = tagRepository;
         this.appMapper = appMapper;
+        this.appVersionRepository = appVersionRepository;
     }
 
     @Override
@@ -71,7 +75,21 @@ public class AppServiceImpl implements AppService {
                 .map(Optional::get)
                 .collect(java.util.stream.Collectors.toList()));
         }
-        return appMapper.toResponse(appRepository.save(app));
+        // Önce App kaydedilmeli ki id oluşsun
+        App savedApp = appRepository.save(app);
+        // AppVersion oluştur
+        if (request.getVersion() != null && !request.getVersion().isBlank()) {
+            AppVersion version = new AppVersion();
+            version.setApp(savedApp);
+            version.setVersion(request.getVersion());
+            version.setApkPath(savedApp.getFileUrl());
+            appVersionRepository.save(version);
+            // App'ın versions listesine ekle (isteğe bağlı, JPA için gerekmez)
+            if (savedApp.getVersions() != null) {
+                savedApp.getVersions().add(version);
+            }
+        }
+        return appMapper.toResponse(savedApp);
     }
 
     @Override

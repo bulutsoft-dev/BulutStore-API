@@ -19,6 +19,7 @@ public class AppRequest {
     private List<String> screenshotUrls;
     private String shortDescription;
     private String fileUrl;
+    private String version;
 
     public String getName() { return name; }
     public void setName(String name) { this.name = name; }
@@ -38,4 +39,6 @@ public class AppRequest {
     public void setShortDescription(String shortDescription) { this.shortDescription = shortDescription; }
     public String getFileUrl() { return fileUrl; }
     public void setFileUrl(String fileUrl) { this.fileUrl = fileUrl; }
+    public String getVersion() { return version; }
+    public void setVersion(String version) { this.version = version; }
 }
