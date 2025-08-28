@@ -99,4 +99,17 @@ public class App {
     public void preUpdate() {
         this.updatedAt = LocalDateTime.now();
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        App app = (App) o;
+        return id != null && id.equals(app.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return getClass().hashCode();
+    }
 }

@@ -26,8 +26,6 @@ public class AppRequest {
     public void setDescription(String description) { this.description = description; }
     public Long getCategoryId() { return categoryId; }
     public void setCategoryId(Long categoryId) { this.categoryId = categoryId; }
-    public Long getDeveloperId() { return null; } // Artık kullanılmıyor
-    public void setDeveloperId(Long developerId) { /* Artık kullanılmıyor */ }
     public AppStatus getStatus() { return status; }
     public void setStatus(AppStatus status) { this.status = status; }
     public List<Long> getTagIds() { return tagIds; }
