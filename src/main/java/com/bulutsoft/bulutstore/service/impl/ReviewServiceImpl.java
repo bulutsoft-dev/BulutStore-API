@@ -55,7 +55,9 @@ public class ReviewServiceImpl implements ReviewService {
             .orElseThrow(() -> new RuntimeException("User not found"));
         review.setApp(app);
         review.setUser(user);
-        return reviewMapper.toResponse(reviewRepository.save(review));
+        Review saved = reviewRepository.save(review);
+        updateAppAvgRating(app.getId());
+        return reviewMapper.toResponse(saved);
     }
 
     @Override
@@ -70,15 +72,33 @@ public class ReviewServiceImpl implements ReviewService {
         }
         existing.setRating(request.getRating());
         existing.setComment(request.getComment());
-        return reviewMapper.toResponse(reviewRepository.save(existing));
+        Review saved = reviewRepository.save(existing);
+        updateAppAvgRating(existing.getApp().getId());
+        return reviewMapper.toResponse(saved);
     }
 
     @Override
     @Transactional
     public void deleteReview(Long id) {
-        if (!reviewRepository.existsById(id)) {
-            throw new RuntimeException("Review not found");
-        }
+        Review review = reviewRepository.findById(id)
+            .orElseThrow(() -> new RuntimeException("Review not found"));
+        Long appId = review.getApp().getId();
         reviewRepository.deleteById(id);
+        updateAppAvgRating(appId);
+    }
+
+    /**
+     * Uygulamanın ortalama rating'ini günceller.
+     */
+    private void updateAppAvgRating(Long appId) {
+        List<Review> reviews = reviewRepository.findByAppId(appId);
+        double avg = reviews.stream()
+            .mapToInt(Review::getRating)
+            .average()
+            .orElse(0.0);
+        App app = appRepository.findById(appId)
+            .orElseThrow(() -> new RuntimeException("App not found"));
+        app.setAvgRating(avg);
+        appRepository.save(app);
     }
 }
