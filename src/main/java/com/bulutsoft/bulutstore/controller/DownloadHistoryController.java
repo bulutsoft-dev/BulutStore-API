@@ -9,7 +9,6 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -21,7 +20,6 @@ public class DownloadHistoryController {
     @Operation(summary = "Create new download history")
     @ApiResponse(responseCode = "201", description = "Download history created")
     @PostMapping
-    @PreAuthorize("hasRole('USER')")
     public ResponseEntity<DownloadHistoryResponse> createDownloadHistory(@Valid @RequestBody DownloadHistoryRequest request) {
         DownloadHistoryResponse created = downloadHistoryService.createDownloadHistory(request);
         return ResponseEntity.status(HttpStatus.CREATED).body(created);

@@ -11,6 +11,7 @@ import com.bulutsoft.bulutstore.repos.UserRepository;
 import com.bulutsoft.bulutstore.repos.CategoryRepository;
 import com.bulutsoft.bulutstore.repos.TagRepository;
 import com.bulutsoft.bulutstore.repos.AppVersionRepository;
+import com.bulutsoft.bulutstore.repos.DownloadHistoryRepository;
 import com.bulutsoft.bulutstore.service.AppService;
 import com.bulutsoft.bulutstore.request.AppRequest;
 import com.bulutsoft.bulutstore.response.AppResponse;
@@ -33,25 +34,38 @@ public class AppServiceImpl implements AppService {
     private final TagRepository tagRepository;
     private final AppMapper appMapper;
     private final AppVersionRepository appVersionRepository;
+    private final DownloadHistoryRepository downloadHistoryRepository;
 
     @Autowired
-    public AppServiceImpl(AppRepository appRepository, UserRepository userRepository, CategoryRepository categoryRepository, TagRepository tagRepository, AppMapper appMapper, AppVersionRepository appVersionRepository) {
+    public AppServiceImpl(AppRepository appRepository, UserRepository userRepository, CategoryRepository categoryRepository, TagRepository tagRepository, AppMapper appMapper, AppVersionRepository appVersionRepository, DownloadHistoryRepository downloadHistoryRepository) {
         this.appRepository = appRepository;
         this.userRepository = userRepository;
         this.categoryRepository = categoryRepository;
         this.tagRepository = tagRepository;
         this.appMapper = appMapper;
         this.appVersionRepository = appVersionRepository;
+        this.downloadHistoryRepository = downloadHistoryRepository;
     }
 
     @Override
     public List<AppResponse> getAllApps() {
-        return appMapper.toResponseList(appRepository.findAllWithDeveloperAndCategory());
+        List<App> apps = appRepository.findAllWithDeveloperAndCategory();
+        List<AppResponse> responses = appMapper.toResponseList(apps);
+        for (int i = 0; i < apps.size(); i++) {
+            long count = downloadHistoryRepository.countByApp_Id(apps.get(i).getId());
+            responses.get(i).setDownloadCount(count);
+        }
+        return responses;
     }
 
     @Override
     public Optional<AppResponse> getAppById(Long id) {
-        return appRepository.findById(id).map(appMapper::toResponse);
+        Optional<App> appOpt = appRepository.findByIdWithDeveloperAndCategory(id);
+        if (appOpt.isEmpty()) return Optional.empty();
+        AppResponse response = appMapper.toResponse(appOpt.get());
+        long count = downloadHistoryRepository.countByApp_Id(id);
+        response.setDownloadCount(count);
+        return Optional.of(response);
     }
 
     @Override
@@ -172,18 +186,38 @@ public class AppServiceImpl implements AppService {
     @Override
     public List<AppResponse> getAppsByDeveloper(Long developerId) {
         Optional<User> developer = userRepository.findById(developerId);
-        return developer.map(user -> appMapper.toResponseList(appRepository.findByDeveloper(user))).orElse(List.of());
+        if (developer.isEmpty()) return List.of();
+        List<App> apps = appRepository.findByDeveloper(developer.get());
+        List<AppResponse> responses = appMapper.toResponseList(apps);
+        for (int i = 0; i < apps.size(); i++) {
+            long count = downloadHistoryRepository.countByApp_Id(apps.get(i).getId());
+            responses.get(i).setDownloadCount(count);
+        }
+        return responses;
     }
 
     @Override
     public List<AppResponse> getAppsByCategory(Long categoryId) {
         Optional<Category> category = categoryRepository.findById(categoryId);
-        return category.map(cat -> appMapper.toResponseList(appRepository.findByCategory(cat))).orElse(List.of());
+        if (category.isEmpty()) return List.of();
+        List<App> apps = appRepository.findByCategory(category.get());
+        List<AppResponse> responses = appMapper.toResponseList(apps);
+        for (int i = 0; i < apps.size(); i++) {
+            long count = downloadHistoryRepository.countByApp_Id(apps.get(i).getId());
+            responses.get(i).setDownloadCount(count);
+        }
+        return responses;
     }
 
     @Override
     public List<AppResponse> searchAppsByName(String name) {
-        return appMapper.toResponseList(appRepository.findByNameContainingIgnoreCase(name));
+        List<App> apps = appRepository.findByNameContainingIgnoreCase(name);
+        List<AppResponse> responses = appMapper.toResponseList(apps);
+        for (int i = 0; i < apps.size(); i++) {
+            long count = downloadHistoryRepository.countByApp_Id(apps.get(i).getId());
+            responses.get(i).setDownloadCount(count);
+        }
+        return responses;
     }
 
     @Override
@@ -206,6 +240,12 @@ public class AppServiceImpl implements AppService {
 
     @Override
     public List<AppResponse> getApprovedApps() {
-        return appMapper.toResponseList(appRepository.findByStatus(com.bulutsoft.bulutstore.entity.AppStatus.APPROVED));
+        List<App> apps = appRepository.findByStatus(com.bulutsoft.bulutstore.entity.AppStatus.APPROVED);
+        List<AppResponse> responses = appMapper.toResponseList(apps);
+        for (int i = 0; i < apps.size(); i++) {
+            long count = downloadHistoryRepository.countByApp_Id(apps.get(i).getId());
+            responses.get(i).setDownloadCount(count);
+        }
+        return responses;
     }
 }

@@ -12,7 +12,7 @@ public class AppResponse {
     private CategoryResponse category;
     private DeveloperResponse developer;
     private AppStatus status;
-    private Long downloadsCount;
+    private long downloadCount;
     private Double avgRating;
     private List<TagResponse> tags;
     private LocalDateTime createdAt;
@@ -24,7 +24,7 @@ public class AppResponse {
 
     public AppResponse() {}
 
-    public AppResponse(Long id, String name, String description, String shortDescription, CategoryResponse category, DeveloperResponse developer, AppStatus status, Long downloadsCount, Double avgRating, List<TagResponse> tags, LocalDateTime createdAt, LocalDateTime updatedAt, String iconUrl, List<String> screenshotUrls, String fileUrl, String versionName) {
+    public AppResponse(Long id, String name, String description, String shortDescription, CategoryResponse category, DeveloperResponse developer, AppStatus status, long downloadCount, Double avgRating, List<TagResponse> tags, LocalDateTime createdAt, LocalDateTime updatedAt, String iconUrl, List<String> screenshotUrls, String fileUrl, String versionName) {
         this.id = id;
         this.name = name;
         this.description = description;
@@ -32,7 +32,7 @@ public class AppResponse {
         this.category = category;
         this.developer = developer;
         this.status = status;
-        this.downloadsCount = downloadsCount;
+        this.downloadCount = downloadCount;
         this.avgRating = avgRating;
         this.tags = tags;
         this.createdAt = createdAt;
@@ -57,8 +57,8 @@ public class AppResponse {
     public void setDeveloper(DeveloperResponse developer) { this.developer = developer; }
     public AppStatus getStatus() { return status; }
     public void setStatus(AppStatus status) { this.status = status; }
-    public Long getDownloadsCount() { return downloadsCount; }
-    public void setDownloadsCount(Long downloadsCount) { this.downloadsCount = downloadsCount; }
+    public long getDownloadCount() { return downloadCount; }
+    public void setDownloadCount(long downloadCount) { this.downloadCount = downloadCount; }
     public Double getAvgRating() { return avgRating; }
     public void setAvgRating(Double avgRating) { this.avgRating = avgRating; }
     public List<TagResponse> getTags() { return tags; }

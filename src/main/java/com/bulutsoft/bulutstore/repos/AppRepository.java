@@ -8,6 +8,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * App entity'si için CRUD ve özel sorguların tanımlandığı repository arayüzü.
@@ -40,4 +41,10 @@ public interface AppRepository extends JpaRepository<App, Long> {
      */
     @Query("SELECT a FROM App a LEFT JOIN FETCH a.developer LEFT JOIN FETCH a.category")
     List<App> findAllWithDeveloperAndCategory();
+
+    /**
+     * Tek bir uygulamayı geliştirici ve kategoriyle birlikte döndürür.
+     */
+    @Query("SELECT a FROM App a LEFT JOIN FETCH a.developer LEFT JOIN FETCH a.category WHERE a.id = :id")
+    Optional<App> findByIdWithDeveloperAndCategory(Long id);
 }

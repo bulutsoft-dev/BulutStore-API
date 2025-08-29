@@ -31,6 +31,8 @@ public class WebSecurityConfig {
             .authorizeHttpRequests(auth -> auth
                 // Önce path bazlı izinler
                 .requestMatchers("/api/auth/**", "/v3/api-docs/**", "/swagger-ui/**").permitAll()
+                // DownloadHistory için POST istekleri de serbest
+                .requestMatchers(org.springframework.http.HttpMethod.POST, "/api/download-histories", "/api/download-histories/**").permitAll()
                 // Sonra GET istekleri serbest
                 .requestMatchers(org.springframework.http.HttpMethod.GET, "/api/**").permitAll()
                 // Diğer POST/PUT/DELETE isteklerinde login zorunlu
