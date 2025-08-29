@@ -28,11 +28,6 @@ public class DownloadHistory {
     @JoinColumn(name = "app_id", nullable = false)
     private App app;
 
-    /** İndiren kullanıcı (anonim indirme için null olabilir) */
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id")
-    private User user;
-
     /** İndirme zamanı */
     private LocalDateTime downloadedAt;
 

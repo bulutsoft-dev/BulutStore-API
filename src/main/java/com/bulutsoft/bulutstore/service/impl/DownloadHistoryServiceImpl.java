@@ -1,18 +1,16 @@
 package com.bulutsoft.bulutstore.service.impl;
 
+import com.bulutsoft.bulutstore.entity.App;
 import com.bulutsoft.bulutstore.entity.DownloadHistory;
 import com.bulutsoft.bulutstore.mapper.DownloadHistoryMapper;
 import com.bulutsoft.bulutstore.repos.DownloadHistoryRepository;
 import com.bulutsoft.bulutstore.repos.AppRepository;
-import com.bulutsoft.bulutstore.repos.UserRepository;
 import com.bulutsoft.bulutstore.service.DownloadHistoryService;
 import com.bulutsoft.bulutstore.request.DownloadHistoryRequest;
 import com.bulutsoft.bulutstore.response.DownloadHistoryResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import java.util.List;
-import java.util.Optional;
 
 /**
  * İndirme geçmişi işlemlerinin iş mantığını ve transaction yönetimini sağlayan servis implementasyonu.
@@ -22,57 +20,30 @@ import java.util.Optional;
 public class DownloadHistoryServiceImpl implements DownloadHistoryService {
     private final DownloadHistoryRepository downloadHistoryRepository;
     private final AppRepository appRepository;
-    private final UserRepository userRepository;
     private final DownloadHistoryMapper downloadHistoryMapper;
 
     @Autowired
-    public DownloadHistoryServiceImpl(DownloadHistoryRepository downloadHistoryRepository, AppRepository appRepository, UserRepository userRepository, DownloadHistoryMapper downloadHistoryMapper) {
+    public DownloadHistoryServiceImpl(DownloadHistoryRepository downloadHistoryRepository, AppRepository appRepository, DownloadHistoryMapper downloadHistoryMapper) {
         this.downloadHistoryRepository = downloadHistoryRepository;
         this.appRepository = appRepository;
-        this.userRepository = userRepository;
         this.downloadHistoryMapper = downloadHistoryMapper;
-    }
-
-    @Override
-    public List<DownloadHistoryResponse> getAllDownloadHistories() {
-        return downloadHistoryMapper.toResponseList(downloadHistoryRepository.findAll());
-    }
-
-    @Override
-    public Optional<DownloadHistoryResponse> getDownloadHistoryById(Long id) {
-        return downloadHistoryRepository.findById(id).map(downloadHistoryMapper::toResponse);
     }
 
     @Override
     @Transactional
     public DownloadHistoryResponse createDownloadHistory(DownloadHistoryRequest request) {
-        DownloadHistory downloadHistory = downloadHistoryMapper.toEntity(request);
-        appRepository.findById(request.getAppId()).ifPresent(downloadHistory::setApp);
-        if (request.getUserId() != null) {
-            userRepository.findById(request.getUserId()).ifPresent(downloadHistory::setUser);
-        } else {
-            downloadHistory.setUser(null);
-        }
-        return downloadHistoryMapper.toResponse(downloadHistoryRepository.save(downloadHistory));
+        App app = appRepository.findById(request.getAppId()).orElseThrow(() -> new IllegalArgumentException("App not found"));
+        DownloadHistory downloadHistory = DownloadHistory.builder()
+                .app(app)
+                .build();
+        downloadHistoryRepository.save(downloadHistory);
+        long count = downloadHistoryRepository.countByApp_Id(request.getAppId());
+        return downloadHistoryMapper.toResponse(count);
     }
 
     @Override
-    @Transactional
-    public DownloadHistoryResponse updateDownloadHistory(Long id, DownloadHistoryRequest request) {
-        DownloadHistory downloadHistory = downloadHistoryMapper.toEntity(request);
-        downloadHistory.setId(id);
-        appRepository.findById(request.getAppId()).ifPresent(downloadHistory::setApp);
-        if (request.getUserId() != null) {
-            userRepository.findById(request.getUserId()).ifPresent(downloadHistory::setUser);
-        } else {
-            downloadHistory.setUser(null);
-        }
-        return downloadHistoryMapper.toResponse(downloadHistoryRepository.save(downloadHistory));
-    }
-
-    @Override
-    @Transactional
-    public void deleteDownloadHistory(Long id) {
-        downloadHistoryRepository.deleteById(id);
+    public DownloadHistoryResponse getDownloadCountByAppId(Long appId) {
+        long count = downloadHistoryRepository.countByApp_Id(appId);
+        return downloadHistoryMapper.toResponse(count);
     }
 }

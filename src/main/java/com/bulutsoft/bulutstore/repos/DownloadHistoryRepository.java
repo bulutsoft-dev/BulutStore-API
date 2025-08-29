@@ -10,4 +10,5 @@ import org.springframework.stereotype.Repository;
  */
 @Repository
 public interface DownloadHistoryRepository extends JpaRepository<DownloadHistory, Long> {
+    long countByApp_Id(Long appId);
 }
