@@ -48,6 +48,7 @@ public class AppServiceImpl implements AppService {
     }
 
     @Override
+    @Transactional
     public List<AppResponse> getAllApps() {
         List<App> apps = appRepository.findAllWithDeveloperAndCategory();
         List<AppResponse> responses = appMapper.toResponseList(apps);
@@ -59,6 +60,7 @@ public class AppServiceImpl implements AppService {
     }
 
     @Override
+    @Transactional
     public Optional<AppResponse> getAppById(Long id) {
         Optional<App> appOpt = appRepository.findByIdWithDeveloperAndCategory(id);
         if (appOpt.isEmpty()) return Optional.empty();
@@ -184,6 +186,7 @@ public class AppServiceImpl implements AppService {
     }
 
     @Override
+    @Transactional
     public List<AppResponse> getAppsByDeveloper(Long developerId) {
         Optional<User> developer = userRepository.findById(developerId);
         if (developer.isEmpty()) return List.of();
@@ -197,6 +200,7 @@ public class AppServiceImpl implements AppService {
     }
 
     @Override
+    @Transactional
     public List<AppResponse> getAppsByCategory(Long categoryId) {
         Optional<Category> category = categoryRepository.findById(categoryId);
         if (category.isEmpty()) return List.of();
@@ -210,6 +214,7 @@ public class AppServiceImpl implements AppService {
     }
 
     @Override
+    @Transactional
     public List<AppResponse> searchAppsByName(String name) {
         List<App> apps = appRepository.findByNameContainingIgnoreCase(name);
         List<AppResponse> responses = appMapper.toResponseList(apps);
@@ -239,6 +244,7 @@ public class AppServiceImpl implements AppService {
     }
 
     @Override
+    @Transactional
     public List<AppResponse> getApprovedApps() {
         List<App> apps = appRepository.findByStatus(com.bulutsoft.bulutstore.entity.AppStatus.APPROVED);
         List<AppResponse> responses = appMapper.toResponseList(apps);
