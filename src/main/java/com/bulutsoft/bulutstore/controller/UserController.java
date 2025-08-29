@@ -5,6 +5,7 @@ import com.bulutsoft.bulutstore.request.UserDeveloperApplicationRequest;
 import com.bulutsoft.bulutstore.request.UserUpdateRequest;
 import com.bulutsoft.bulutstore.response.UserResponse;
 import com.bulutsoft.bulutstore.service.UserService;
+import com.bulutsoft.bulutstore.service.EmailService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
@@ -22,6 +23,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class UserController {
     private final UserService userService;
+    private final EmailService emailService;
 
     @Operation(summary = "Get all users")
     @ApiResponse(responseCode = "200", description = "List of users")
@@ -80,8 +82,12 @@ public class UserController {
     @Operation(summary = "Kullanıcı developer olmak için başvuru yapar")
     @PostMapping("/apply-developer")
     @PreAuthorize("isAuthenticated()")
-    public ResponseEntity<String> applyForDeveloper(@RequestBody @jakarta.validation.Valid UserDeveloperApplicationRequest request) {
+    public ResponseEntity<String> applyForDeveloper(@RequestBody @jakarta.validation.Valid UserDeveloperApplicationRequest request, org.springframework.security.core.Authentication authentication) {
         userService.applyForDeveloper(request.getApplicationText());
+        // Admin e-posta adresleri (gerekirse çoğaltılabilir)
+        String adminEmail = "petsolivesoft@gmail.com";
+        String username = authentication.getName();
+        emailService.sendDeveloperApplicationNotification(adminEmail, username);
         return ResponseEntity.ok("Developer başvurusu alındı.");
     }
 

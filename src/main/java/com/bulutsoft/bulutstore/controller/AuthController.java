@@ -8,6 +8,7 @@ import com.bulutsoft.bulutstore.request.LoginRequest;
 import com.bulutsoft.bulutstore.request.RegisterRequest;
 import com.bulutsoft.bulutstore.response.AuthResponse;
 import com.bulutsoft.bulutstore.security.JwtUtil;
+import com.bulutsoft.bulutstore.service.EmailService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -27,6 +28,7 @@ public class AuthController {
     private final PasswordEncoder passwordEncoder;
     private final AuthenticationManager authenticationManager;
     private final JwtUtil jwtUtil;
+    private final EmailService emailService;
 
     @PostMapping("/register")
     public ResponseEntity<?> register(@Valid @RequestBody RegisterRequest request) {
@@ -44,6 +46,7 @@ public class AuthController {
                 .status(UserStatus.ACTIVE)
                 .build();
         userRepository.save(user);
+        emailService.sendWelcomeEmail(user.getEmail(), user.getUsername());
         return ResponseEntity.ok("Kayıt başarılı");
     }
 
@@ -61,4 +64,3 @@ public class AuthController {
         }
     }
 }
-

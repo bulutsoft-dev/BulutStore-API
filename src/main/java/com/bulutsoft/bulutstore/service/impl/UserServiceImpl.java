@@ -7,6 +7,7 @@ import com.bulutsoft.bulutstore.entity.User;
 import com.bulutsoft.bulutstore.mapper.UserMapper;
 import com.bulutsoft.bulutstore.repos.UserRepository;
 import com.bulutsoft.bulutstore.service.UserService;
+import com.bulutsoft.bulutstore.service.EmailService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -24,12 +25,14 @@ public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final UserMapper userMapper;
     private final BCryptPasswordEncoder passwordEncoder;
+    private final EmailService emailService;
 
     @Autowired
-    public UserServiceImpl(UserRepository userRepository, UserMapper userMapper, BCryptPasswordEncoder passwordEncoder) {
+    public UserServiceImpl(UserRepository userRepository, UserMapper userMapper, BCryptPasswordEncoder passwordEncoder, EmailService emailService) {
         this.userRepository = userRepository;
         this.userMapper = userMapper;
         this.passwordEncoder = passwordEncoder;
+        this.emailService = emailService;
     }
 
     @Override
@@ -104,6 +107,7 @@ public class UserServiceImpl implements UserService {
         user.setRole(com.bulutsoft.bulutstore.entity.Role.DEVELOPER);
         user.setStatus(com.bulutsoft.bulutstore.entity.UserStatus.ACTIVE);
         userRepository.save(user);
+        emailService.sendDeveloperApplicationResult(user.getEmail(), true);
     }
 
     @Override
@@ -112,6 +116,7 @@ public class UserServiceImpl implements UserService {
         User user = userRepository.findById(userId).orElseThrow(() -> new RuntimeException("Kullanıcı bulunamadı"));
         user.setDeveloperApplicationStatus(com.bulutsoft.bulutstore.entity.DeveloperApplicationStatus.REJECTED);
         userRepository.save(user);
+        emailService.sendDeveloperApplicationResult(user.getEmail(), false);
     }
 
     @Override
